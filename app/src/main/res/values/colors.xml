@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background">#0F172A</color>
+    <color name="card_bg">#1E293B</color>
+    <color name="accent">#3B82F6</color>
+    <color name="win">#22C55E</color>
+    <color name="lose">#EF4444</color>
+    <color name="war">#F59E0B</color>
+    <color name="text">#F1F5F9</color>
+</resources>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#0C4A6E"
+    android:gravity="center"
+    android:padding="32dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="מלחמה"
+        android:textColor="#F1F5F9"
+        android:textSize="42sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="24dp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="40dp">
+
+        <TextView
+            android:id="@+id/tvPlayerCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="אתה: 26"
+            android:textColor="#93C5FD"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:layout_marginEnd="60dp" />
+
+        <TextView
+            android:id="@+id/tvCpuCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="מחשב: 26"
+            android:textColor="#FCA5A5"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="40dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginEnd="48dp">
+
+            <TextView
+                android:id="@+id/cardPlayer"
+                android:layout_width="160dp"
+                android:layout_height="224dp"
+                android:background="#FFFFFF"
+                android:gravity="center"
+                android:text="?"
+                android:textSize="56sp"
+                android:textStyle="bold"
+                android:textColor="#111111"
+                android:elevation="16dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="אתה"
+                android:textColor="#E0F2FE"
+                android:textSize="18sp"
+                android:layout_marginTop="12dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/cardCpu"
+                android:layout_width="160dp"
+                android:layout_height="224dp"
+                android:background="#FFFFFF"
+                android:gravity="center"
+                android:text="?"
+                android:textSize="56sp"
+                android:textStyle="bold"
+                android:textColor="#111111"
+                android:elevation="16dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="מחשב"
+                android:textColor="#E0F2FE"
+                android:textSize="18sp"
+                android:layout_marginTop="12dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ממתין לשליפת קלף..."
+        android:textColor="#F1F5F9"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:gravity="center" />
+
+</LinearLayout>
