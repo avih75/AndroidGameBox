@@ -167,3 +167,6 @@ Exact payload shapes will be defined per game, but the envelope and transport st
 - Adding a lightweight “Kick player” control for the Host.
 
 ---
+
+**Status:** Agreed for the first multiplayer stage of Game Box.  
+All future multiplayer games must follow this model unless this document is explicitly updated.
