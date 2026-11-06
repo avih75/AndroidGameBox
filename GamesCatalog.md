@@ -1,30 +1,30 @@
 # Game Box Catalog
 
 ## Cards Games
-war
+war - Done - missing two player mode
 memory
-higher_lower
+higher lower
 snap
-go_fish
+go fish
 solitaire
 Taki
 Poker
 21
 
-## category_board_games
-tic_tac_toe
-connect_four
-dots_boxes
+## Board games
+tic tac toe
+connect four
+dots boxes
 checkers
 battleship
 
-## category_word_number_games
-guess_number
+## Word number games
+guess number
 hangman
 2048
 sudoku
-word_search
+word search
 
-## category_strategy_games
+## Strategy games
 nim
 reversi
