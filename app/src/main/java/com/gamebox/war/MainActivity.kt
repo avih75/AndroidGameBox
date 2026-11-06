@@ -120,7 +120,18 @@ class MainActivity : AppCompatActivity() {
                 itemView.isClickable = gameItem.isAvailable
                 itemView.isFocusable = gameItem.isAvailable
                 if (gameItem.isAvailable) {
-                    itemView.setOnClickListener { showGameSetup() }
+                    itemView.setOnClickListener {
+                        when (gameItem.title) {
+                            R.string.game_war -> showGameSetup()
+                            R.string.game_taki -> {
+                                startActivity(android.content.Intent(
+                                    this,
+                                    com.gamebox.taki.ui.phone.TakiHostActivity::class.java
+                                ))
+                            }
+                            else -> showGameSetup()
+                        }
+                    }
                 }
                 catalog.addView(itemView)
             }

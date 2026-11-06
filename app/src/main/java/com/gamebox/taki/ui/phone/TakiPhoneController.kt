@@ -64,30 +64,26 @@ class TakiPhoneController(
         // Hand
         handContainer.removeAllViews()
         private.hand.forEach { card ->
-            val cardView = TextView(root.context).apply {
-                text = card.displayName()
-                textSize = 13f
-                setTextColor(if (isReddish(card.color)) 0xFFDC2626.toInt() else 0xFF111111.toInt())
-                setBackgroundColor(0xFFFFFFFF.toInt())
-                gravity = Gravity.CENTER
-                width = dp(72)
-                height = dp(100)
-                setPadding(6, 6, 6, 6)
-                val lp = LinearLayout.LayoutParams(dp(72), dp(100)).apply {
-                    marginEnd = dp(8)
-                }
-                layoutParams = lp
-                isClickable = private.isMyTurn
-                isFocusable = private.isMyTurn
-                alpha = if (private.isMyTurn) 1f else 0.55f
-                setOnClickListener {
-                    if (private.isMyTurn) {
-                        // For Change Color we need a color picker later; default RED for now
-                        val chosen = if (card.rank.name == "CHANGE_COLOR") TakiColor.RED else null
-                        onAction(TakiAction.PlayCard(card, chosen))
-                    }
+        val cardView = TextView(root.context).apply {
+            text = card.displayName()
+            textSize = 13f
+            setTextColor(if (isReddish(card.color)) 0xFFDC2626.toInt() else 0xFF111111.toInt())
+            setBackgroundColor(0xFFFFFFFF.toInt())
+            gravity = Gravity.CENTER
+            setPadding(6, 6, 6, 6)
+            layoutParams = LinearLayout.LayoutParams(dp(72), dp(100)).apply {
+                marginEnd = dp(8)
+            }
+            isClickable = private.isMyTurn
+            isFocusable = private.isMyTurn
+            alpha = if (private.isMyTurn) 1f else 0.55f
+            setOnClickListener {
+                if (private.isMyTurn) {
+                    val chosen = if (card.rank.name == "CHANGE_COLOR") TakiColor.RED else null
+                    onAction(TakiAction.PlayCard(card, chosen))
                 }
             }
+        }
             handContainer.addView(cardView)
         }
 
