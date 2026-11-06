@@ -9,6 +9,8 @@
     <string name="war_selected_mode">מצב משחק: שחקן נגד מחשב</string>
     <string name="use_external_display">השתמש במסך חיצוני כשזמין</string>
     <string name="external_display_setting_description">כאשר מסך מתאים מחובר, לוח המשחק יוצג עליו. המשחק ימשיך לפעול בטלפון אם אין מסך חיצוני.</string>
+    <string name="show_shared_info_on_phone">הצג מידע משותף גם בטלפון</string>
+    <string name="shared_info_on_phone_description">כאשר האפשרות כבויה והמסך החיצוני פעיל, הקלפים, הניקוד והודעת התור יופיעו רק במסך החיצוני. פקדי המשחק יישארו בטלפון.</string>
     <string name="settings_note">הגדרות נוספות, שפות ומצבי משחק יתווספו בהמשך.</string>
     <string name="game_available_status">זמין עכשיו · %1$s לפיתוח</string>
     <string name="game_planned_status">מתוכנן · %1$s לפיתוח</string>

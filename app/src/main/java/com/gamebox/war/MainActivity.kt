@@ -8,6 +8,7 @@ import android.widget.LinearLayout
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.TextView
+import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -89,6 +90,8 @@ class MainActivity : AppCompatActivity() {
 
             category.games.forEach { gameItem ->
                 val itemView = inflater.inflate(R.layout.item_game_catalog, catalog, false)
+                itemView.findViewById<android.widget.ImageView>(R.id.ivGameArtwork)
+                    .setImageResource(gameItem.artwork)
                 itemView.findViewById<TextView>(R.id.tvGameTitle).setText(gameItem.title)
                 itemView.findViewById<TextView>(R.id.tvGameDescription).setText(gameItem.description)
                 itemView.findViewById<TextView>(R.id.tvGameStatus).text = getString(
@@ -126,7 +129,14 @@ class MainActivity : AppCompatActivity() {
             preferences.edit().putBoolean(KEY_EXTERNAL_DISPLAY, isChecked).apply()
             if (!isChecked) {
                 dismissPresentation()
+                updatePhoneSharedInfoVisibility()
             }
+        }
+        val showSharedInfoOnPhone = findViewById<CheckBox>(R.id.checkboxShowSharedInfoOnPhone)
+        showSharedInfoOnPhone.isChecked = preferences.getBoolean(KEY_SHOW_SHARED_INFO_ON_PHONE, false)
+        showSharedInfoOnPhone.setOnCheckedChangeListener { _, isChecked ->
+            preferences.edit().putBoolean(KEY_SHOW_SHARED_INFO_ON_PHONE, isChecked).apply()
+            updatePhoneSharedInfoVisibility()
         }
         findViewById<Button>(R.id.btnSettingsBack).setOnClickListener { showHome() }
     }
@@ -185,14 +195,16 @@ class MainActivity : AppCompatActivity() {
             } else {
                 dismissPresentation()
                 tvDisplayStatus.text = getString(R.string.external_display_disconnected)
+                updatePhoneSharedInfoVisibility()
             }
         }
     }
 
     private fun showPresentation(display: Display) {
         try {
-            presentation = TablePresentation(this, display)
-            presentation?.show()
+            val newPresentation = TablePresentation(this, display)
+            newPresentation.show()
+            presentation = newPresentation
             presentationDisplay = display
             tvDisplayStatus.text = getString(R.string.external_display_connected)
             updateUI()
@@ -208,10 +220,12 @@ class MainActivity : AppCompatActivity() {
         } catch (_: Exception) {}
         presentation = null
         presentationDisplay = null
+        updatePhoneSharedInfoVisibility()
     }
 
     private fun updateUI() {
         if (currentScreen != Screen.GAME) return
+        updatePhoneSharedInfoVisibility()
 
         tvPlayerCount.text = "אתה: ${game.playerDeck.size}"
         tvCpuCount.text = "מחשב: ${game.cpuDeck.size}"
@@ -241,6 +255,18 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
+    private fun updatePhoneSharedInfoVisibility() {
+        if (currentScreen != Screen.GAME) return
+        val sharedInfoVisibility =
+            if (presentation != null &&
+                !preferences.getBoolean(KEY_SHOW_SHARED_INFO_ON_PHONE, false)
+            ) View.GONE else View.VISIBLE
+
+        findViewById<View>(R.id.playerCounts).visibility = sharedInfoVisibility
+        findViewById<View>(R.id.tvMessage).visibility = sharedInfoVisibility
+        findViewById<View>(R.id.cardArea).visibility = sharedInfoVisibility
+    }
+
     private fun renderCard(view: TextView, card: Card?) {
         if (card == null) {
             view.text = "?"
@@ -268,5 +294,6 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val KEY_EXTERNAL_DISPLAY = "use_external_display"
+        private const val KEY_SHOW_SHARED_INFO_ON_PHONE = "show_shared_info_on_phone"
     }
 }

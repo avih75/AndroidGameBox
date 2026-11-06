@@ -140,6 +140,11 @@ Requirements are mandatory for the initial increment unless marked **Future**.
 - **FR-036 (Future)** A game that supports private information shall keep that
   information on the intended player's device/view and provide a separately
   defined shared view.
+- **FR-037** When an external display is active, the user shall be able to
+  configure whether shared game information (cards, counts, and round result)
+  also appears on the phone; game controls shall remain available there.
+- **FR-038** Each catalog game shall display an illustrative image. Games in
+  the same category may reuse a category-level illustration.
 
 ### 3.4 Play modes and multiplayer
 

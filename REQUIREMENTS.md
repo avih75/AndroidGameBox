@@ -62,6 +62,9 @@ appropriate local multiplayer options.
 - **PR-12** External-display support shall be capability-dependent; the app
   shall not promise that every Android device, adapter, or wireless-display
   method supports a second independent display.
+- **PR-13** When an external display is active, users shall be able to choose
+  whether shared game information is also shown on the phone; game controls
+  shall remain available on the phone.
 
 ### 4.4 Initial game categories
 
@@ -91,6 +94,8 @@ These are candidates selected for familiar rules and a reasonable path to a
 small offline implementation. "Easy" and "medium" are rough relative effort
 labels, not estimates or commitments. Validate each candidate's rules,
 accessibility, multiplayer needs, and expected scope before scheduling it.
+Each catalog entry shall have an illustrative image; related games may reuse a
+category illustration until game-specific artwork is available.
 
 ## 5. Initial release proposal
 
