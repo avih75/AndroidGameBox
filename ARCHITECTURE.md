@@ -36,6 +36,7 @@ app/
           navigation/
         common/
           display/
+          audio/
           ui/
         games/
           war/
@@ -64,7 +65,8 @@ injection framework, or multi-module setup solely to match this example.
 
 - `app`: app entry point, game selection, and app-level navigation.
 - `common`: small capabilities genuinely shared across games, such as
-  external-display lifecycle coordination and common UI conventions.
+  external-display lifecycle coordination, shared game audio, and common UI
+  conventions.
 - `games.<game>.domain`: rules and state for one game; no Android imports.
 - `games.<game>.ui.phone`: phone UI and interaction for that game.
 - `games.<game>.ui.external`: that game's public secondary-display rendering.

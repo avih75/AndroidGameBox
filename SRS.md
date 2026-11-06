@@ -145,6 +145,19 @@ Requirements are mandatory for the initial increment unless marked **Future**.
   also appears on the phone; game controls shall remain available there.
 - **FR-038** Each catalog game shall display an illustrative image. Games in
   the same category may reuse a category-level illustration.
+- **FR-039** Games shall provide optional, calm background music and relevant
+  sound effects, with separate user settings to enable or disable each.
+- **FR-043** Background music and sound effects shall stop when leaving the
+  active game and resume only when a game is started.
+- **FR-044** The War game shall award one series point to the winner when a
+  complete match ends. Starting the next match shall preserve the series
+  score; starting a new series shall reset it.
+- **FR-045** The phone shall always show the human player's remaining card
+  count, even when shared game information is configured to appear only on the
+  external display.
+- **FR-046** When an external display is active, the phone shall let the
+  player enter or select a short message and send it to the public display.
+  The public display shall show the message without hiding the game result.
 
 ### 3.4 Play modes and multiplayer
 
@@ -224,9 +237,14 @@ The initial increment is acceptable when all of the following are true:
 4. The user can play a complete human-versus-computer game without an external
    display.
 5. When a supported secondary display is connected, it shows the public table
-   and stays synchronized with game state.
+   and stays synchronized with game state, including series score and any
+   message sent by the player.
 6. Disconnecting the secondary display leaves the phone game usable.
 7. Unsupported play modes are not offered as if they were implemented.
+8. Each completed War match increments the winner's series score once; the
+   next match preserves it, and resetting the series clears it.
+9. With shared information hidden from the phone, the player's remaining card
+   count and all game controls remain available there.
 
 ## 8. Items to resolve before final acceptance
 

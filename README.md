@@ -32,8 +32,13 @@ version-pinned wrapper is a recommended next build-reliability task.
 - Local settings to enable or disable use of the external display.
 - A setting to show shared game information on both screens or only on the
   external display (phone controls stay available).
+- Procedurally generated ambient background music and card sound effects,
+  each independently configurable. The audio is synthesized locally, so the
+  app does not bundle third-party music or sound files.
 - Game catalog grouped into card, board, word/number, and strategy games.
 - Reusable category illustrations on the catalog game cards.
+- War series scoring, a phone-only player card count, and selectable messages
+  that can be shown on the public display.
 - Only War is currently playable; other catalog entries are planned.
 
 War tie handling in the existing POC is simplified. Confirm the final rule

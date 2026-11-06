@@ -54,12 +54,30 @@
         android:textColor="#94A3B8"
         android:textSize="14sp" />
 
+    <CheckBox
+        android:id="@+id/checkboxBackgroundMusic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:buttonTint="@color/accent"
+        android:text="@string/background_music"
+        android:textColor="@color/text"
+        android:textSize="17sp" />
+
+    <CheckBox
+        android:id="@+id/checkboxSoundEffects"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:buttonTint="@color/accent"
+        android:text="@string/sound_effects"
+        android:textColor="@color/text"
+        android:textSize="17sp" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/catalog_game_background"
         android:padding="16dp"
-        android:text="@string/settings_note"
+        android:text="@string/settings_audio_note"
         android:textColor="#CBD5E1"
         android:textSize="14sp" />
 

@@ -4,6 +4,7 @@ import android.app.Presentation
 import android.content.Context
 import android.os.Bundle
 import android.view.Display
+import android.view.View
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 
@@ -17,6 +18,8 @@ class TablePresentation(
     private var cardPlayer: TextView? = null
     private var cardCpu: TextView? = null
     private var tvMessage: TextView? = null
+    private var tvSeriesScore: TextView? = null
+    private var tvPublicMessage: TextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +30,8 @@ class TablePresentation(
         cardPlayer = findViewById(R.id.cardPlayer)
         cardCpu = findViewById(R.id.cardCpu)
         tvMessage = findViewById(R.id.tvMessage)
+        tvSeriesScore = findViewById(R.id.tvSeriesScore)
+        tvPublicMessage = findViewById(R.id.tvPublicMessage)
     }
 
     fun update(
@@ -35,11 +40,22 @@ class TablePresentation(
         playerCard: Card?,
         cpuCard: Card?,
         message: String,
-        messageType: GameEngine.MessageType
+        messageType: GameEngine.MessageType,
+        playerSeriesScore: Int,
+        cpuSeriesScore: Int,
+        publicMessage: String?
     ) {
         tvPlayerCount?.text = "אתה: $playerCount"
         tvCpuCount?.text = "מחשב: $cpuCount"
         tvMessage?.text = message
+        tvSeriesScore?.text = context.getString(
+            R.string.series_score,
+            playerSeriesScore,
+            cpuSeriesScore
+        )
+        tvPublicMessage?.text = publicMessage.orEmpty()
+        tvPublicMessage?.visibility =
+            if (publicMessage.isNullOrBlank()) View.GONE else View.VISIBLE
 
         val color = when (messageType) {
             GameEngine.MessageType.WIN -> ContextCompat.getColor(context, R.color.win)

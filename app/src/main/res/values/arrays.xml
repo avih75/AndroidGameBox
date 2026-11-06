@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="public_game_messages">
+        <item>אני אנצח!</item>
+        <item>היה לך מזל...</item>
+        <item>כל הכבוד!</item>
+        <item>הפעם הבאה שלי!</item>
+        <item>זה היה קרוב!</item>
+        <item>מלחמה!</item>
+    </string-array>
+</resources>

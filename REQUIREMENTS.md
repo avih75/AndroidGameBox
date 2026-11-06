@@ -65,6 +65,11 @@ appropriate local multiplayer options.
 - **PR-13** When an external display is active, users shall be able to choose
   whether shared game information is also shown on the phone; game controls
   shall remain available on the phone.
+- **PR-14** The War game shall show each player's remaining card count on the
+  appropriate display and keep a cumulative match score across games in a
+  series.
+- **PR-15** During War, the player shall be able to send a short selected
+  message (for example, encouragement or playful taunts) to the public display.
 
 ### 4.4 Initial game categories
 

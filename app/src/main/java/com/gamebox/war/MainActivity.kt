@@ -4,14 +4,18 @@ import android.hardware.display.DisplayManager
 import android.os.Bundle
 import android.view.Display
 import android.view.LayoutInflater
-import android.widget.LinearLayout
+import android.view.View
+import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.CheckBox
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
-import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.widget.doAfterTextChanged
+import com.gamebox.common.audio.GameAudioController
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,6 +27,7 @@ class MainActivity : AppCompatActivity() {
 
     private var currentScreen = Screen.HOME
     private lateinit var game: GameEngine
+    private val gameAudio = GameAudioController()
     private var presentation: TablePresentation? = null
     private var presentationDisplay: Display? = null
 
@@ -31,9 +36,19 @@ class MainActivity : AppCompatActivity() {
     private lateinit var cardPlayer: TextView
     private lateinit var cardCpu: TextView
     private lateinit var tvMessage: TextView
+    private lateinit var tvPrivatePlayerCount: TextView
+    private lateinit var tvSeriesScore: TextView
+    private lateinit var tvPublicMessageStatus: TextView
     private lateinit var tvDisplayStatus: TextView
     private lateinit var btnDraw: Button
     private lateinit var btnNewGame: Button
+    private lateinit var btnResetSeries: Button
+    private lateinit var btnSendPublicMessage: Button
+    private lateinit var publicMessageInput: AutoCompleteTextView
+    private var playerSeriesScore = 0
+    private var cpuSeriesScore = 0
+    private var matchScoreRecorded = false
+    private var publicMessage: String? = null
 
     private val displayListener = object : DisplayManager.DisplayListener {
         override fun onDisplayAdded(displayId: Int) {
@@ -55,6 +70,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         game = GameEngine()
+        playerSeriesScore = preferences.getInt(KEY_PLAYER_SERIES_SCORE, 0)
+        cpuSeriesScore = preferences.getInt(KEY_CPU_SERIES_SCORE, 0)
 
         val dm = getSystemService(DISPLAY_SERVICE) as DisplayManager
         dm.registerDisplayListener(displayListener, null)
@@ -74,6 +91,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun showHome() {
         currentScreen = Screen.HOME
+        gameAudio.stopGame()
         dismissPresentation()
         setContentView(R.layout.screen_home)
         val catalog = findViewById<LinearLayout>(R.id.gameCatalogContainer)
@@ -90,7 +108,7 @@ class MainActivity : AppCompatActivity() {
 
             category.games.forEach { gameItem ->
                 val itemView = inflater.inflate(R.layout.item_game_catalog, catalog, false)
-                itemView.findViewById<android.widget.ImageView>(R.id.ivGameArtwork)
+                itemView.findViewById<ImageView>(R.id.ivGameArtwork)
                     .setImageResource(gameItem.artwork)
                 itemView.findViewById<TextView>(R.id.tvGameTitle).setText(gameItem.title)
                 itemView.findViewById<TextView>(R.id.tvGameDescription).setText(gameItem.description)
@@ -112,6 +130,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun showGameSetup() {
         currentScreen = Screen.GAME_SETUP
+        gameAudio.stopGame()
         dismissPresentation()
         setContentView(R.layout.screen_game_setup)
         findViewById<Button>(R.id.btnStartWar).setOnClickListener { startWarGame() }
@@ -120,6 +139,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun showSettings() {
         currentScreen = Screen.SETTINGS
+        gameAudio.stopGame()
         dismissPresentation()
         setContentView(R.layout.screen_settings)
 
@@ -138,6 +158,18 @@ class MainActivity : AppCompatActivity() {
             preferences.edit().putBoolean(KEY_SHOW_SHARED_INFO_ON_PHONE, isChecked).apply()
             updatePhoneSharedInfoVisibility()
         }
+        val backgroundMusicSetting = findViewById<CheckBox>(R.id.checkboxBackgroundMusic)
+        backgroundMusicSetting.isChecked = backgroundMusicEnabled()
+        backgroundMusicSetting.setOnCheckedChangeListener { _, isChecked ->
+            preferences.edit().putBoolean(KEY_BACKGROUND_MUSIC, isChecked).apply()
+            gameAudio.updateSettings(isChecked, soundEffectsEnabled())
+        }
+        val soundEffectsSetting = findViewById<CheckBox>(R.id.checkboxSoundEffects)
+        soundEffectsSetting.isChecked = soundEffectsEnabled()
+        soundEffectsSetting.setOnCheckedChangeListener { _, isChecked ->
+            preferences.edit().putBoolean(KEY_SOUND_EFFECTS, isChecked).apply()
+            gameAudio.updateSettings(backgroundMusicEnabled(), isChecked)
+        }
         findViewById<Button>(R.id.btnSettingsBack).setOnClickListener { showHome() }
     }
 
@@ -150,17 +182,49 @@ class MainActivity : AppCompatActivity() {
         cardPlayer = findViewById(R.id.cardPlayer)
         cardCpu = findViewById(R.id.cardCpu)
         tvMessage = findViewById(R.id.tvMessage)
+        tvPrivatePlayerCount = findViewById(R.id.tvPrivatePlayerCount)
+        tvSeriesScore = findViewById(R.id.tvSeriesScore)
+        tvPublicMessageStatus = findViewById(R.id.tvPublicMessageStatus)
         tvDisplayStatus = findViewById(R.id.tvDisplayStatus)
         btnDraw = findViewById(R.id.btnDraw)
         btnNewGame = findViewById(R.id.btnNewGame)
+        btnResetSeries = findViewById(R.id.btnResetSeries)
+        btnSendPublicMessage = findViewById(R.id.btnSendPublicMessage)
+        publicMessageInput = findViewById(R.id.inputPublicMessage)
+        publicMessageInput.setAdapter(android.widget.ArrayAdapter.createFromResource(
+            this,
+            R.array.public_game_messages,
+            R.layout.item_spinner_dropdown
+        ))
+        publicMessageInput.setOnClickListener {
+            if (publicMessageInput.text.isNullOrBlank()) publicMessageInput.showDropDown()
+        }
+        publicMessageInput.doAfterTextChanged { updatePublicMessageControls() }
 
+        gameAudio.startGame(backgroundMusicEnabled(), soundEffectsEnabled())
         game.newGame()
+        matchScoreRecorded = false
+        publicMessage = null
+        publicMessageInput.text.clear()
         btnDraw.setOnClickListener {
-            if (game.draw()) updateUI()
+            gameAudio.playCardDraw()
+            if (game.draw()) {
+                gameAudio.playCardsCollected()
+                updateUI()
+            }
         }
         btnNewGame.setOnClickListener {
-            game.newGame()
-            updateUI()
+            startNextWarGame()
+        }
+        btnResetSeries.setOnClickListener { resetWarSeries() }
+        btnSendPublicMessage.setOnClickListener {
+            if (presentation != null) {
+                val message = publicMessageInput.text.toString().trim()
+                if (message.isNotEmpty()) {
+                    publicMessage = message
+                    updateUI()
+                }
+            }
         }
         findViewById<Button>(R.id.btnGameMenu).setOnClickListener { showHome() }
 
@@ -225,11 +289,18 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateUI() {
         if (currentScreen != Screen.GAME) return
-        updatePhoneSharedInfoVisibility()
+        if (game.isGameOver && !matchScoreRecorded) recordCompletedMatch()
 
         tvPlayerCount.text = "אתה: ${game.playerDeck.size}"
         tvCpuCount.text = "מחשב: ${game.cpuDeck.size}"
+        tvPrivatePlayerCount.text = getString(R.string.private_player_card_count, game.playerDeck.size)
+        tvSeriesScore.text = getString(
+            R.string.series_score,
+            playerSeriesScore,
+            cpuSeriesScore
+        )
         tvMessage.text = game.lastMessage
+        updatePublicMessageControls()
 
         val color = when (game.lastMessageType) {
             GameEngine.MessageType.WIN -> ContextCompat.getColor(this, R.color.win)
@@ -251,8 +322,12 @@ class MainActivity : AppCompatActivity() {
             playerCard = game.lastPlayerCard,
             cpuCard = game.lastCpuCard,
             message = game.lastMessage,
-            messageType = game.lastMessageType
+            messageType = game.lastMessageType,
+            playerSeriesScore = playerSeriesScore,
+            cpuSeriesScore = cpuSeriesScore,
+            publicMessage = publicMessage
         )
+        updatePhoneSharedInfoVisibility()
     }
 
     private fun updatePhoneSharedInfoVisibility() {
@@ -265,6 +340,54 @@ class MainActivity : AppCompatActivity() {
         findViewById<View>(R.id.playerCounts).visibility = sharedInfoVisibility
         findViewById<View>(R.id.tvMessage).visibility = sharedInfoVisibility
         findViewById<View>(R.id.cardArea).visibility = sharedInfoVisibility
+        tvSeriesScore.visibility = sharedInfoVisibility
+        updatePublicMessageControls()
+    }
+
+    private fun updatePublicMessageControls() {
+        if (currentScreen != Screen.GAME) return
+        btnSendPublicMessage.isEnabled =
+            presentation != null && publicMessageInput.text.isNotBlank()
+        tvPublicMessageStatus.setText(
+            when {
+                presentation == null -> R.string.public_message_needs_display
+                publicMessage?.let {
+                    it == publicMessageInput.text.toString().trim()
+                } == true -> R.string.public_message_sent
+                else -> R.string.public_message_ready
+            }
+        )
+    }
+
+    private fun recordCompletedMatch() {
+        when (game.lastMessageType) {
+            GameEngine.MessageType.WIN -> playerSeriesScore++
+            GameEngine.MessageType.LOSE -> cpuSeriesScore++
+            else -> return
+        }
+        matchScoreRecorded = true
+        preferences.edit()
+            .putInt(KEY_PLAYER_SERIES_SCORE, playerSeriesScore)
+            .putInt(KEY_CPU_SERIES_SCORE, cpuSeriesScore)
+            .apply()
+    }
+
+    private fun startNextWarGame() {
+        game.newGame()
+        matchScoreRecorded = false
+        publicMessage = null
+        publicMessageInput.text.clear()
+        updateUI()
+    }
+
+    private fun resetWarSeries() {
+        playerSeriesScore = 0
+        cpuSeriesScore = 0
+        preferences.edit()
+            .putInt(KEY_PLAYER_SERIES_SCORE, playerSeriesScore)
+            .putInt(KEY_CPU_SERIES_SCORE, cpuSeriesScore)
+            .apply()
+        startNextWarGame()
     }
 
     private fun renderCard(view: TextView, card: Card?) {
@@ -279,10 +402,19 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (currentScreen == Screen.GAME) checkExternalDisplay()
+        if (currentScreen == Screen.GAME) {
+            gameAudio.startGame(backgroundMusicEnabled(), soundEffectsEnabled())
+            checkExternalDisplay()
+        }
+    }
+
+    override fun onPause() {
+        gameAudio.stopGame()
+        super.onPause()
     }
 
     override fun onDestroy() {
+        gameAudio.stopGame()
         val dm = getSystemService(DISPLAY_SERVICE) as DisplayManager
         dm.unregisterDisplayListener(displayListener)
         dismissPresentation()
@@ -292,8 +424,18 @@ class MainActivity : AppCompatActivity() {
     private fun usesExternalDisplay(): Boolean =
         preferences.getBoolean(KEY_EXTERNAL_DISPLAY, true)
 
+    private fun backgroundMusicEnabled(): Boolean =
+        preferences.getBoolean(KEY_BACKGROUND_MUSIC, true)
+
+    private fun soundEffectsEnabled(): Boolean =
+        preferences.getBoolean(KEY_SOUND_EFFECTS, true)
+
     companion object {
         private const val KEY_EXTERNAL_DISPLAY = "use_external_display"
         private const val KEY_SHOW_SHARED_INFO_ON_PHONE = "show_shared_info_on_phone"
+        private const val KEY_BACKGROUND_MUSIC = "background_music_enabled"
+        private const val KEY_SOUND_EFFECTS = "sound_effects_enabled"
+        private const val KEY_PLAYER_SERIES_SCORE = "war_player_series_score"
+        private const val KEY_CPU_SERIES_SCORE = "war_cpu_series_score"
     }
 }

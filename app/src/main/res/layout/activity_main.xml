@@ -31,6 +31,28 @@
         android:textSize="14sp"
         android:layout_marginBottom="16dp" />
 
+    <TextView
+        android:id="@+id/tvPrivatePlayerCount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:text="@string/private_player_card_count_initial"
+        android:textColor="#60A5FA"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvSeriesScore"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:text="@string/series_score_initial"
+        android:textColor="@color/text"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
     <!-- Scores -->
     <LinearLayout
         android:id="@+id/playerCounts"
@@ -140,6 +162,59 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/tvPublicMessageStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/public_message_needs_display"
+        android:textColor="#94A3B8"
+        android:textSize="12sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <AutoCompleteTextView
+            android:id="@+id/inputPublicMessage"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:contentDescription="@string/public_message_picker_description"
+            android:dropDownBackground="@color/card_bg"
+            android:hint="@string/public_message_hint"
+            android:imeOptions="actionSend"
+            android:inputType="textCapSentences|text"
+            android:maxLines="1"
+            android:maxLength="80"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:textColor="@color/text"
+            android:textColorHint="#94A3B8"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/btnSendPublicMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:enabled="false"
+            android:text="@string/send_to_public_screen"
+            android:textAllCaps="false" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnResetSeries"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginBottom="4dp"
+        android:text="@string/reset_series_score"
+        android:textAllCaps="false"
+        android:textSize="13sp" />
+
+    <TextView
         android:id="@+id/tvDisplayStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -164,7 +239,7 @@
         android:id="@+id/btnNewGame"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:text="משחק חדש"
+        android:text="@string/next_war_game"
         android:textSize="15sp"
         android:backgroundTint="#334155"
         android:textColor="#F1F5F9" />
