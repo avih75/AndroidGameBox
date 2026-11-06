@@ -7,9 +7,9 @@ import android.view.Display
 import android.view.Gravity
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.gamebox.games.taki.domain.Direction
-import com.gamebox.games.taki.domain.TakiColor
-import com.gamebox.games.taki.domain.TakiPublicState
+import com.gamebox.taki.domain.Direction
+import com.gamebox.taki.domain.TakiColor
+import com.gamebox.taki.domain.TakiPublicState
 
 /**
  * External display (TV) – shows only public state.

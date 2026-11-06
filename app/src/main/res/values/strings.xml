@@ -73,4 +73,6 @@
     <string name="external_display_disconnected">מסך חיצוני: לא מחובר</string>
     <string name="external_display_connected">מסך חיצוני: מחובר ✓</string>
     <string name="external_display_error">מסך חיצוני: שגיאה בחיבור</string>
+    <string name="game_taki">טאקי</string>
+    <string name="game_taki_description">משחק קלפים קלאסי. שים קלפים באותו צבע או מספר, השתמש בטאקי ובקלפים מיוחדים.</string>
 </resources>

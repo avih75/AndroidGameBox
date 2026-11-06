@@ -7,11 +7,11 @@ import android.os.Handler
 import android.os.Looper
 import android.view.Display
 import android.view.View
-import com.gamebox.games.taki.domain.TakiAction
-import com.gamebox.games.taki.domain.TakiAi
-import com.gamebox.games.taki.domain.TakiEngine
-import com.gamebox.games.taki.domain.TakiState
-import com.gamebox.games.taki.ui.external.TakiTablePresentation
+import com.gamebox.taki.domain.TakiAction
+import com.gamebox.taki.domain.TakiAi
+import com.gamebox.taki.domain.TakiEngine
+import com.gamebox.taki.domain.TakiState
+import com.gamebox.taki.ui.external.TakiTablePresentation
 
 /**
  * Host activity for single-player / local Taki.

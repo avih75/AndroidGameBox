@@ -5,11 +5,11 @@ import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.gamebox.games.taki.domain.TakiAction
-import com.gamebox.games.taki.domain.TakiCard
-import com.gamebox.games.taki.domain.TakiColor
-import com.gamebox.games.taki.domain.TakiPrivateState
-import com.gamebox.games.taki.domain.TakiPublicState
+import com.gamebox.taki.domain.TakiAction
+import com.gamebox.taki.domain.TakiCard
+import com.gamebox.taki.domain.TakiColor
+import com.gamebox.taki.domain.TakiPrivateState
+import com.gamebox.taki.domain.TakiPublicState
 
 /**
  * Binds phone UI to public + private state.

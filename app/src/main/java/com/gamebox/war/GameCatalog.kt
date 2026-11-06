@@ -21,10 +21,11 @@ object GameCatalog {
             R.string.category_card_games,
             listOf(
                 GameCatalogItem(R.string.game_war, R.string.game_war_description, R.string.effort_easy, R.drawable.art_cards, true),
+                GameCatalogItem(R.string.game_taki, R.string.game_taki_description, R.string.effort_medium, R.drawable.art_cards, true),
                 GameCatalogItem(R.string.game_memory, R.string.game_memory_description, R.string.effort_easy, R.drawable.art_cards),
                 GameCatalogItem(R.string.game_higher_lower, R.string.game_higher_lower_description, R.string.effort_easy, R.drawable.art_cards),
                 GameCatalogItem(R.string.game_snap, R.string.game_snap_description, R.string.effort_easy, R.drawable.art_cards),
-                GameCatalogItem(R.string.game_go_fish, R.string.game_go_fish_description, R.string.effort_medium, R.drawable.art_cards),
+                GameCatalogItem(R.string.game_go_fish, R.string.game_go_fish_description, R.string.effort_medium, R.drawable.art_cards),                
                 GameCatalogItem(R.string.game_solitaire, R.string.game_solitaire_description, R.string.effort_medium, R.drawable.art_cards)
             )
         ),
