@@ -20,6 +20,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.gamebox.common.audio.GameAudioController
+import com.gamebox.common.multiplayer.NearbySession
 import com.gamebox.taki.domain.TakiAction
 import com.gamebox.taki.domain.TakiAi
 import com.gamebox.taki.domain.TakiEngine
@@ -29,7 +30,6 @@ import com.gamebox.taki.domain.TakiPublicState
 import com.gamebox.taki.domain.TakiState
 import com.gamebox.taki.ui.external.TakiTablePresentation
 import com.gamebox.taki.ui.nearby.TakiMessageCodec
-import com.gamebox.taki.ui.nearby.TakiNearbySession
 import org.json.JSONException
 import org.json.JSONObject
 import java.nio.charset.StandardCharsets
@@ -48,7 +48,7 @@ class TakiHostActivity : Activity() {
     private var state: TakiState? = null
     private var phoneController: TakiPhoneController? = null
     private var presentation: TakiTablePresentation? = null
-    private var nearbySession: TakiNearbySession? = null
+    private var nearbySession: NearbySession? = null
     private var role = SessionRole.LOCAL
     private var myPlayerId = "p0"
     private var selectedPlayerCount = DEFAULT_PLAYER_COUNT
@@ -64,7 +64,6 @@ class TakiHostActivity : Activity() {
     private val remotePlayerIds = linkedMapOf<String, String>()
     private val remotePlayerNames = linkedMapOf<String, String>()
     private val discoveredEndpoints = linkedMapOf<String, String>()
-    private var lobbyTitle: TextView? = null
     private var lobbyMessage: TextView? = null
     private var lobbyOptions: LinearLayout? = null
     private var lobbyActionButton: Button? = null
@@ -194,7 +193,7 @@ class TakiHostActivity : Activity() {
         nearbySession?.startDiscovery()
     }
 
-    private fun createNearbySession() = TakiNearbySession(this, object : TakiNearbySession.Listener {
+    private fun createNearbySession() = NearbySession(this, TAKI_SERVICE_ID, object : NearbySession.Listener {
         override fun onConnectionInitiated(
             endpointId: String,
             endpointName: String,
@@ -312,6 +311,10 @@ class TakiHostActivity : Activity() {
         }
         handler.removeCallbacksAndMessages(null)
         nearbySession?.stopAdvertising()
+        remotePlayerIds.keys.toList().forEachIndexed { index, endpointId ->
+            remotePlayerIds[endpointId] = "p${index + 1}"
+        }
+        sendLobbyUpdates()
         val players = mutableListOf("אני")
         players += remotePlayerIds.entries
             .sortedBy { it.value.drop(1).toInt() }
@@ -424,8 +427,9 @@ class TakiHostActivity : Activity() {
                 val names = players?.let { array ->
                     (0 until array.length()).map { array.optString(it) }
                 }.orEmpty()
+                val capacity = message.optInt("capacity", TakiMultiplayerConfig.MAX_PLAYERS)
                 updateLobby(
-                    "שחקנים בחדר: ${names.joinToString(" · ")}. ממתין להתחלת המשחק...",
+                    "שחקנים בחדר (${names.size}/$capacity): ${names.joinToString(" · ")}. ממתין להתחלת המשחק...",
                     actionEnabled = false
                 )
             }
@@ -575,7 +579,7 @@ class TakiHostActivity : Activity() {
             setPadding(dp(28), dp(40), dp(28), dp(28))
             setBackgroundColor(0xFF0F172A.toInt())
         }
-        lobbyTitle = TextView(this).apply {
+        val titleView = TextView(this).apply {
             text = title
             textSize = 28f
             setTextColor(0xFFF1F5F9.toInt())
@@ -602,7 +606,7 @@ class TakiHostActivity : Activity() {
             text = "ביטול"
             setOnClickListener { onCancel() }
         }
-        content.addView(lobbyTitle)
+        content.addView(titleView)
         content.addView(lobbyMessage)
         content.addView(lobbyOptions)
         lobbyActionButton?.let(content::addView)
@@ -756,6 +760,7 @@ class TakiHostActivity : Activity() {
         private const val REQUEST_NEARBY_PERMISSIONS = 701
         private const val AI_TURN_DELAY_MS = 700L
         private const val TAKI_MUSIC_VOLUME = 0.025
+        private const val TAKI_SERVICE_ID = "com.gamebox.taki"
         private const val SCORE_PREFERENCES = "taki_scores"
         private const val SETTINGS_PREFERENCES = "game_box_settings"
         private const val KEY_PLAYER_COUNT = "player_count"

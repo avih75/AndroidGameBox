@@ -46,10 +46,12 @@ val public = state.publicState()
 val private = state.privateStateFor("p1")
 ```
 
-## Next steps
+## Android UI and multiplayer
 
-1. Copy these files into the Android project under  
-   `app/src/main/java/com/gamebox/games/taki/domain/`
-2. Add unit tests for legal plays, stacking, Taki sequence, win condition.
-3. Build phone UI + external Presentation that only render `TakiPublicState` / `TakiPrivateState`.
-4. Later: wire to `common/multiplayer`.
+- `com/gamebox/taki/ui/phone/TakiHostActivity.kt` offers practice, host, and join modes.
+- A host advertises a Taki lobby over Nearby Connections, sets the maximum player count (2–6), and starts once another player has joined.
+- Clients discover nearby lobbies and authenticate the connection code on both devices.
+- The host remains authoritative: it applies all actions and sends public state plus only the receiving client's private hand.
+- If a client disconnects mid-game, the host takes over that seat with the computer player. The host can view and reset persistent win totals.
+- `com/gamebox/common/multiplayer/NearbySession.kt` contains the reusable Nearby advertising, discovery, connection, and payload transport.
+- `com/gamebox/taki/ui/nearby/TakiMessageCodec.kt` encodes Taki lobby, action, public-state, and per-player private-state messages.

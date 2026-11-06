@@ -1,4 +1,4 @@
-package com.gamebox.taki.ui.nearby
+package com.gamebox.common.multiplayer
 
 import android.content.Context
 import com.google.android.gms.nearby.Nearby
@@ -15,8 +15,9 @@ import com.google.android.gms.nearby.connection.PayloadCallback
 import com.google.android.gms.nearby.connection.PayloadTransferUpdate
 import com.google.android.gms.nearby.connection.Strategy
 
-class TakiNearbySession(
+class NearbySession(
     context: Context,
+    private val serviceId: String,
     private val listener: Listener
 ) {
     interface Listener {
@@ -82,7 +83,7 @@ class TakiNearbySession(
     fun startAdvertising(displayName: String) {
         client.startAdvertising(
             displayName,
-            SERVICE_ID,
+            serviceId,
             lifecycleCallback,
             AdvertisingOptions.Builder().setStrategy(Strategy.P2P_CLUSTER).build()
         ).addOnFailureListener(listener::onError)
@@ -90,7 +91,7 @@ class TakiNearbySession(
 
     fun startDiscovery() {
         client.startDiscovery(
-            SERVICE_ID,
+            serviceId,
             discoveryCallback,
             DiscoveryOptions.Builder().setStrategy(Strategy.P2P_CLUSTER).build()
         ).addOnFailureListener(listener::onError)
@@ -126,9 +127,5 @@ class TakiNearbySession(
         client.stopDiscovery()
         client.stopAllEndpoints()
         endpointNames.clear()
-    }
-
-    companion object {
-        private const val SERVICE_ID = "com.gamebox.taki"
     }
 }
