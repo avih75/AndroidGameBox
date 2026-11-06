@@ -183,7 +183,7 @@
             android:layout_height="48dp"
             android:layout_weight="1"
             android:contentDescription="@string/public_message_picker_description"
-            android:dropDownBackground="@color/card_bg"
+            android:popupBackground="@color/card_bg"
             android:hint="@string/public_message_hint"
             android:imeOptions="actionSend"
             android:inputType="textCapSentences|text"
