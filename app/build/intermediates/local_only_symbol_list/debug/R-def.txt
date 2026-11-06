@@ -18,6 +18,8 @@ drawable catalog_game_background
 id btnCloseTaki
 id btnDraw
 id btnGameMenu
+id btnHostWar
+id btnJoinWar
 id btnNewGame
 id btnNewTakiGame
 id btnOpenSettings
@@ -143,6 +145,9 @@ string show_shared_info_on_phone
 string sound_effects
 string start_game
 string use_external_display
+string war_host_game
+string war_join_game
+string war_multiplayer_heading
 string war_selected_mode
 string war_setup_description
 style Theme.WarGameBox

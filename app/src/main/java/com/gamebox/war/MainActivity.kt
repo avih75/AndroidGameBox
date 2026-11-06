@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import com.gamebox.common.audio.GameAudioController
+import com.gamebox.common.ui.PlayingCardView
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,8 +34,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var tvPlayerCount: TextView
     private lateinit var tvCpuCount: TextView
-    private lateinit var cardPlayer: TextView
-    private lateinit var cardCpu: TextView
+    private lateinit var cardPlayer: PlayingCardView
+    private lateinit var cardCpu: PlayingCardView
     private lateinit var tvMessage: TextView
     private lateinit var tvPrivatePlayerCount: TextView
     private lateinit var tvSeriesScore: TextView
@@ -145,6 +146,18 @@ class MainActivity : AppCompatActivity() {
         dismissPresentation()
         setContentView(R.layout.screen_game_setup)
         findViewById<Button>(R.id.btnStartWar).setOnClickListener { startWarGame() }
+        findViewById<Button>(R.id.btnHostWar).setOnClickListener {
+            startActivity(
+                android.content.Intent(this, WarMultiplayerActivity::class.java)
+                    .putExtra(WarMultiplayerActivity.EXTRA_MODE, WarMultiplayerActivity.MODE_HOST)
+            )
+        }
+        findViewById<Button>(R.id.btnJoinWar).setOnClickListener {
+            startActivity(
+                android.content.Intent(this, WarMultiplayerActivity::class.java)
+                    .putExtra(WarMultiplayerActivity.EXTRA_MODE, WarMultiplayerActivity.MODE_JOIN)
+            )
+        }
         findViewById<Button>(R.id.btnSetupBack).setOnClickListener { showHome() }
     }
 
@@ -401,13 +414,11 @@ class MainActivity : AppCompatActivity() {
         startNextWarGame()
     }
 
-    private fun renderCard(view: TextView, card: Card?) {
+    private fun renderCard(view: PlayingCardView, card: Card?) {
         if (card == null) {
-            view.text = "?"
-            view.setTextColor(0xFF111111.toInt())
+            view.showCardBack()
         } else {
-            view.text = card.display()
-            view.setTextColor(if (card.isRed) 0xFFDC2626.toInt() else 0xFF111111.toInt())
+            view.showCard(card.rank, card.suit, card.isRed)
         }
     }
 

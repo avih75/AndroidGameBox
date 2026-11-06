@@ -3230,6 +3230,8 @@ id bounceStart
 id btnCloseTaki
 id btnDraw
 id btnGameMenu
+id btnHostWar
+id btnJoinWar
 id btnNewGame
 id btnNewTakiGame
 id btnOpenSettings
@@ -4137,6 +4139,9 @@ string sound_effects
 string start_game
 string status_bar_notification_info_overflow
 string use_external_display
+string war_host_game
+string war_join_game
+string war_multiplayer_heading
 string war_selected_mode
 string war_setup_description
 style AlertDialog_AppCompat

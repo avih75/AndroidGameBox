@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
+import com.gamebox.common.ui.PlayingCardView;
 import com.gamebox.war.R;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -20,10 +21,10 @@ public final class PresentationTableBinding implements ViewBinding {
   private final LinearLayout rootView;
 
   @NonNull
-  public final TextView cardCpu;
+  public final PlayingCardView cardCpu;
 
   @NonNull
-  public final TextView cardPlayer;
+  public final PlayingCardView cardPlayer;
 
   @NonNull
   public final TextView tvCpuCount;
@@ -40,10 +41,10 @@ public final class PresentationTableBinding implements ViewBinding {
   @NonNull
   public final TextView tvSeriesScore;
 
-  private PresentationTableBinding(@NonNull LinearLayout rootView, @NonNull TextView cardCpu,
-      @NonNull TextView cardPlayer, @NonNull TextView tvCpuCount, @NonNull TextView tvMessage,
-      @NonNull TextView tvPlayerCount, @NonNull TextView tvPublicMessage,
-      @NonNull TextView tvSeriesScore) {
+  private PresentationTableBinding(@NonNull LinearLayout rootView, @NonNull PlayingCardView cardCpu,
+      @NonNull PlayingCardView cardPlayer, @NonNull TextView tvCpuCount,
+      @NonNull TextView tvMessage, @NonNull TextView tvPlayerCount,
+      @NonNull TextView tvPublicMessage, @NonNull TextView tvSeriesScore) {
     this.rootView = rootView;
     this.cardCpu = cardCpu;
     this.cardPlayer = cardPlayer;
@@ -82,13 +83,13 @@ public final class PresentationTableBinding implements ViewBinding {
     int id;
     missingId: {
       id = R.id.cardCpu;
-      TextView cardCpu = ViewBindings.findChildViewById(rootView, id);
+      PlayingCardView cardCpu = ViewBindings.findChildViewById(rootView, id);
       if (cardCpu == null) {
         break missingId;
       }
 
       id = R.id.cardPlayer;
-      TextView cardPlayer = ViewBindings.findChildViewById(rootView, id);
+      PlayingCardView cardPlayer = ViewBindings.findChildViewById(rootView, id);
       if (cardPlayer == null) {
         break missingId;
       }

@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
+import com.gamebox.common.ui.PlayingCardView;
 import com.gamebox.war.R;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -40,10 +41,10 @@ public final class ActivityMainBinding implements ViewBinding {
   public final LinearLayout cardArea;
 
   @NonNull
-  public final TextView cardCpu;
+  public final PlayingCardView cardCpu;
 
   @NonNull
-  public final TextView cardPlayer;
+  public final PlayingCardView cardPlayer;
 
   @NonNull
   public final AutoCompleteTextView inputPublicMessage;
@@ -75,7 +76,7 @@ public final class ActivityMainBinding implements ViewBinding {
   private ActivityMainBinding(@NonNull LinearLayout rootView, @NonNull Button btnDraw,
       @NonNull Button btnGameMenu, @NonNull Button btnNewGame, @NonNull Button btnResetSeries,
       @NonNull Button btnSendPublicMessage, @NonNull LinearLayout cardArea,
-      @NonNull TextView cardCpu, @NonNull TextView cardPlayer,
+      @NonNull PlayingCardView cardCpu, @NonNull PlayingCardView cardPlayer,
       @NonNull AutoCompleteTextView inputPublicMessage, @NonNull LinearLayout playerCounts,
       @NonNull TextView tvCpuCount, @NonNull TextView tvDisplayStatus, @NonNull TextView tvMessage,
       @NonNull TextView tvPlayerCount, @NonNull TextView tvPrivatePlayerCount,
@@ -164,13 +165,13 @@ public final class ActivityMainBinding implements ViewBinding {
       }
 
       id = R.id.cardCpu;
-      TextView cardCpu = ViewBindings.findChildViewById(rootView, id);
+      PlayingCardView cardCpu = ViewBindings.findChildViewById(rootView, id);
       if (cardCpu == null) {
         break missingId;
       }
 
       id = R.id.cardPlayer;
-      TextView cardPlayer = ViewBindings.findChildViewById(rootView, id);
+      PlayingCardView cardPlayer = ViewBindings.findChildViewById(rootView, id);
       if (cardPlayer == null) {
         break missingId;
       }

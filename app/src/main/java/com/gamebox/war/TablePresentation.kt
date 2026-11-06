@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Display
 import android.view.View
 import android.widget.TextView
+import com.gamebox.common.ui.PlayingCardView
 import androidx.core.content.ContextCompat
 
 class TablePresentation(
@@ -15,8 +16,8 @@ class TablePresentation(
 
     private var tvPlayerCount: TextView? = null
     private var tvCpuCount: TextView? = null
-    private var cardPlayer: TextView? = null
-    private var cardCpu: TextView? = null
+    private var cardPlayer: PlayingCardView? = null
+    private var cardCpu: PlayingCardView? = null
     private var tvMessage: TextView? = null
     private var tvSeriesScore: TextView? = null
     private var tvPublicMessage: TextView? = null
@@ -69,16 +70,12 @@ class TablePresentation(
         renderCard(cardCpu, cpuCard)
     }
 
-    private fun renderCard(view: TextView?, card: Card?) {
+    private fun renderCard(view: PlayingCardView?, card: Card?) {
         if (view == null) return
         if (card == null) {
-            view.text = "?"
-            view.setTextColor(0xFF111111.toInt())
-            view.setBackgroundColor(0xFFFFFFFF.toInt())
+            view.showCardBack()
         } else {
-            view.text = card.display()
-            view.setTextColor(if (card.isRed) 0xFFDC2626.toInt() else 0xFF111111.toInt())
-            view.setBackgroundColor(0xFFFFFFFF.toInt())
+            view.showCard(card.rank, card.suit, card.isRed)
         }
     }
 }

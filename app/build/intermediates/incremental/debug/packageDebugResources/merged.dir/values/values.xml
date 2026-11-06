@@ -90,6 +90,9 @@
     <string name="sound_effects">צלילי משחק</string>
     <string name="start_game">התחל משחק</string>
     <string name="use_external_display">השתמש במסך חיצוני כשזמין</string>
+    <string name="war_host_game">ארח משחק (2–6 שחקנים)</string>
+    <string name="war_join_game">הצטרף למשחק בקרבת מקום</string>
+    <string name="war_multiplayer_heading">או לשחק עם חברים בקרבת מקום</string>
     <string name="war_selected_mode">מצב משחק: שחקן נגד מחשב</string>
     <string name="war_setup_description">הכן משחק חדש של מלחמה</string>
     <style name="Theme.WarGameBox" parent="Theme.MaterialComponents.DayNight.NoActionBar">

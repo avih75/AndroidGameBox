@@ -191,7 +191,23 @@ class GameAudioController {
         val level = 0.72 + 0.28 * sin(2.0 * PI * seconds / BREATH_SECONDS)
         val current = chordSample(CHORDS[chordIndex], seconds)
         val next = chordSample(CHORDS[nextChordIndex], seconds)
-        return (current * (1.0 - transition) + next * transition) * level * musicVolume
+        val accompaniment = current * (1.0 - transition) + next * transition
+        return (accompaniment * ACCOMPANIMENT_VOLUME + melodySample(seconds)) *
+            level * musicVolume
+    }
+
+    private fun melodySample(seconds: Double): Double {
+        val notePosition = seconds % MELODY_LOOP_SECONDS
+        val noteIndex = (notePosition / MELODY_NOTE_SECONDS).toInt()
+        val noteTime = notePosition % MELODY_NOTE_SECONDS
+        val frequency = MELODY_NOTES[noteIndex]
+        val attack = (noteTime / MELODY_ATTACK_SECONDS).coerceIn(0.0, 1.0)
+        val release = ((MELODY_NOTE_SECONDS - noteTime) / MELODY_RELEASE_SECONDS)
+            .coerceIn(0.0, 1.0)
+        val envelope = smoothStep(attack) * smoothStep(release)
+        val phase = 2.0 * PI * frequency * noteTime
+        return (sin(phase) + sin(phase * 2.0) * MELODY_HARMONIC_VOLUME) *
+            envelope * MELODY_VOLUME
     }
 
     private fun chordSample(chord: DoubleArray, seconds: Double): Double {
@@ -256,6 +272,13 @@ class GameAudioController {
         private const val CHORD_FADE_SECONDS = 2.0
         private const val BREATH_SECONDS = 6.0
         private const val MUSIC_VOLUME = 0.10
+        private const val ACCOMPANIMENT_VOLUME = 0.42
+        private const val MELODY_VOLUME = 0.38
+        private const val MELODY_HARMONIC_VOLUME = 0.12
+        private const val MELODY_NOTE_SECONDS = 1.0
+        private const val MELODY_LOOP_SECONDS = 8.0
+        private const val MELODY_ATTACK_SECONDS = 0.06
+        private const val MELODY_RELEASE_SECONDS = 0.18
         private const val DRAW_LENGTH = SAMPLE_RATE / 5
         private const val COLLECT_LENGTH = SAMPLE_RATE / 4
         private const val PLAY_LENGTH = SAMPLE_RATE / 7
@@ -276,6 +299,10 @@ class GameAudioController {
             doubleArrayOf(110.00, 130.81, 164.81),
             doubleArrayOf(87.31, 110.00, 130.81),
             doubleArrayOf(98.00, 123.47, 146.83)
+        )
+        private val MELODY_NOTES = doubleArrayOf(
+            261.63, 329.63, 392.00, 329.63,
+            293.66, 349.23, 392.00, 261.63
         )
     }
 }

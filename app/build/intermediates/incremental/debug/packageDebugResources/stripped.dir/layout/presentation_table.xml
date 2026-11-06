@@ -68,17 +68,12 @@
             android:gravity="center"
             android:layout_marginEnd="32dp">
 
-            <TextView
+            <com.gamebox.common.ui.PlayingCardView
                 android:id="@+id/cardPlayer"
                 android:layout_width="160dp"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="#FFFFFF"
-                android:gravity="center"
-                android:text="?"
-                android:textSize="56sp"
-                android:textStyle="bold"
-                android:textColor="#111111"
+                android:contentDescription="קלף השחקן"
                 android:elevation="16dp" />
 
             <TextView
@@ -96,17 +91,12 @@
             android:orientation="vertical"
             android:gravity="center">
 
-            <TextView
+            <com.gamebox.common.ui.PlayingCardView
                 android:id="@+id/cardCpu"
                 android:layout_width="160dp"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="#FFFFFF"
-                android:gravity="center"
-                android:text="?"
-                android:textSize="56sp"
-                android:textStyle="bold"
-                android:textColor="#111111"
+                android:contentDescription="קלף המחשב"
                 android:elevation="16dp" />
 
             <TextView

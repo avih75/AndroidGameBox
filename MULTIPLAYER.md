@@ -168,5 +168,5 @@ Exact payload shapes will be defined per game, but the envelope and transport st
 
 ---
 
-**Status:** Taki is the first networked title. It uses Nearby Connections for host advertising, client discovery, authenticated joining, host-authoritative actions, and per-client private state. Its lobby and message contract remain Taki-specific; shared discovery/connection/payload transport lives in `common/multiplayer`.
+**Status:** Taki and War use Nearby Connections for host advertising, client discovery, authenticated joining, host-authoritative actions, and per-client private state. Each game retains its own lobby and message contract; shared discovery/connection/payload transport lives in `common/multiplayer`.
 All future multiplayer games must follow this model unless this document is explicitly updated.

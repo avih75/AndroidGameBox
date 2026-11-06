@@ -55,3 +55,5 @@ val private = state.privateStateFor("p1")
 - If a client disconnects mid-game, the host takes over that seat with the computer player. The host can view and reset persistent win totals.
 - `com/gamebox/common/multiplayer/NearbySession.kt` contains the reusable Nearby advertising, discovery, connection, and payload transport.
 - `com/gamebox/taki/ui/nearby/TakiMessageCodec.kt` encodes Taki lobby, action, public-state, and per-player private-state messages.
+- War offers local play against the computer plus Nearby host/join modes for 2–6 players. The host resolves simultaneous reveals and broadcasts only public round state.
+- `com/gamebox/common/ui/PlayingCardView.kt` draws reusable standard playing-card faces and backs for War phone, multiplayer, and external-display tables.

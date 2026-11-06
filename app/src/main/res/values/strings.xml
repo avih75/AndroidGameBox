@@ -7,6 +7,9 @@
     <string name="start_game">התחל משחק</string>
     <string name="war_setup_description">הכן משחק חדש של מלחמה</string>
     <string name="war_selected_mode">מצב משחק: שחקן נגד מחשב</string>
+    <string name="war_multiplayer_heading">או לשחק עם חברים בקרבת מקום</string>
+    <string name="war_host_game">ארח משחק (2–6 שחקנים)</string>
+    <string name="war_join_game">הצטרף למשחק בקרבת מקום</string>
     <string name="use_external_display">השתמש במסך חיצוני כשזמין</string>
     <string name="external_display_setting_description">כאשר מסך מתאים מחובר, לוח המשחק יוצג עליו. המשחק ימשיך לפעול בטלפון אם אין מסך חיצוני.</string>
     <string name="show_shared_info_on_phone">הצג מידע משותף גם בטלפון</string>

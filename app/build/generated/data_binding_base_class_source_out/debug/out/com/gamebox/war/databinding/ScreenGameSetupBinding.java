@@ -20,14 +20,22 @@ public final class ScreenGameSetupBinding implements ViewBinding {
   private final LinearLayout rootView;
 
   @NonNull
+  public final Button btnHostWar;
+
+  @NonNull
+  public final Button btnJoinWar;
+
+  @NonNull
   public final Button btnSetupBack;
 
   @NonNull
   public final Button btnStartWar;
 
-  private ScreenGameSetupBinding(@NonNull LinearLayout rootView, @NonNull Button btnSetupBack,
-      @NonNull Button btnStartWar) {
+  private ScreenGameSetupBinding(@NonNull LinearLayout rootView, @NonNull Button btnHostWar,
+      @NonNull Button btnJoinWar, @NonNull Button btnSetupBack, @NonNull Button btnStartWar) {
     this.rootView = rootView;
+    this.btnHostWar = btnHostWar;
+    this.btnJoinWar = btnJoinWar;
     this.btnSetupBack = btnSetupBack;
     this.btnStartWar = btnStartWar;
   }
@@ -59,6 +67,18 @@ public final class ScreenGameSetupBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.btnHostWar;
+      Button btnHostWar = ViewBindings.findChildViewById(rootView, id);
+      if (btnHostWar == null) {
+        break missingId;
+      }
+
+      id = R.id.btnJoinWar;
+      Button btnJoinWar = ViewBindings.findChildViewById(rootView, id);
+      if (btnJoinWar == null) {
+        break missingId;
+      }
+
       id = R.id.btnSetupBack;
       Button btnSetupBack = ViewBindings.findChildViewById(rootView, id);
       if (btnSetupBack == null) {
@@ -71,7 +91,8 @@ public final class ScreenGameSetupBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ScreenGameSetupBinding((LinearLayout) rootView, btnSetupBack, btnStartWar);
+      return new ScreenGameSetupBinding((LinearLayout) rootView, btnHostWar, btnJoinWar,
+          btnSetupBack, btnStartWar);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));
