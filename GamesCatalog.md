@@ -1,13 +1,13 @@
 # Game Box Catalog
 
 ## Cards Games
-war - Done - missing two player mode
+war - Done
 memory
 higher lower
 snap
 go fish
 solitaire
-Taki
+Taki - Done
 Poker
 21
 
