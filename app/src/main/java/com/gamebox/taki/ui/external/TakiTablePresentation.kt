@@ -5,11 +5,13 @@ import android.content.Context
 import android.os.Bundle
 import android.view.Display
 import android.view.Gravity
+import android.graphics.drawable.GradientDrawable
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.gamebox.taki.domain.Direction
 import com.gamebox.taki.domain.TakiColor
 import com.gamebox.taki.domain.TakiPublicState
+import com.gamebox.taki.domain.TakiRank
 
 /**
  * External display (TV) – shows only public state.
@@ -47,8 +49,9 @@ class TakiTablePresentation(
     }
 
     fun update(public: TakiPublicState) {
-        tvTopCard?.text = public.topCard.displayName()
-        tvTopCard?.setTextColor(if (public.topCard.color?.let { isRed(it) } == true) 0xFFDC2626.toInt() else 0xFF111111.toInt())
+        tvTopCard?.text = "${cardSymbol(public.topCard.rank)}\n${public.topCard.displayName()}"
+        tvTopCard?.setTextColor(0xFFFFFFFF.toInt())
+        tvTopCard?.background = cardBackground(public.topCard.color)
 
         tvCurrentColor?.text = "צבע נוכחי: ${colorName(public.currentColor)}"
         tvCurrentColor?.setTextColor(colorInt(public.currentColor))
@@ -94,5 +97,35 @@ class TakiTablePresentation(
         TakiColor.YELLOW -> 0xFFFBBF24.toInt()
     }
 
-    private fun isRed(c: TakiColor) = c == TakiColor.RED || c == TakiColor.YELLOW
+    private fun cardSymbol(rank: TakiRank) = when (rank) {
+        TakiRank.ONE -> "1"
+        TakiRank.TWO -> "2"
+        TakiRank.THREE -> "3"
+        TakiRank.FOUR -> "4"
+        TakiRank.FIVE -> "5"
+        TakiRank.SIX -> "6"
+        TakiRank.SEVEN -> "7"
+        TakiRank.EIGHT -> "8"
+        TakiRank.NINE -> "9"
+        TakiRank.PLUS_TWO -> "+2"
+        TakiRank.PLUS_THREE -> "+3"
+        TakiRank.STOP -> "⊘"
+        TakiRank.CHANGE_DIRECTION -> "↻"
+        TakiRank.CHANGE_COLOR -> "✦"
+        TakiRank.TAKI -> "T"
+    }
+
+    private fun cardBackground(color: TakiColor?) = GradientDrawable(
+        GradientDrawable.Orientation.TL_BR,
+        when (color) {
+            TakiColor.RED -> intArrayOf(0xFFFF6B6B.toInt(), 0xFFB91C1C.toInt())
+            TakiColor.GREEN -> intArrayOf(0xFF4ADE80.toInt(), 0xFF15803D.toInt())
+            TakiColor.BLUE -> intArrayOf(0xFF60A5FA.toInt(), 0xFF1D4ED8.toInt())
+            TakiColor.YELLOW -> intArrayOf(0xFFFDE047.toInt(), 0xFFD97706.toInt())
+            null -> intArrayOf(0xFFA78BFA.toInt(), 0xFF6D28D9.toInt())
+        }
+    ).apply {
+        cornerRadius = 18f
+        setStroke(4, 0xFFF8FAFC.toInt())
+    }
 }

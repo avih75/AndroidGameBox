@@ -11,7 +11,7 @@ import kotlin.math.sin
 
 class GameAudioController {
 
-    private enum class Effect { CARD_DRAW, CARD_COLLECT }
+    private enum class Effect { CARD_DRAW, CARD_COLLECT, CARD_PLAY }
 
     private data class Voice(
         val effect: Effect,
@@ -22,12 +22,14 @@ class GameAudioController {
     private val pendingEffects = ConcurrentLinkedQueue<Effect>()
     @Volatile private var active = false
     @Volatile private var musicEnabled = true
+    @Volatile private var musicVolume = MUSIC_VOLUME
     @Volatile private var effectsEnabled = true
     @Volatile private var audioTrack: AudioTrack? = null
     @Volatile private var audioThread: Thread? = null
 
-    fun startGame(music: Boolean, effects: Boolean) {
+    fun startGame(music: Boolean, effects: Boolean, musicVolume: Double = MUSIC_VOLUME) {
         musicEnabled = music
+        this.musicVolume = musicVolume.coerceIn(0.0, MUSIC_VOLUME)
         effectsEnabled = effects
         if (active) return
         if (!music && !effects) return
@@ -105,6 +107,8 @@ class GameAudioController {
     fun playCardDraw() = enqueueEffect(Effect.CARD_DRAW)
 
     fun playCardsCollected() = enqueueEffect(Effect.CARD_COLLECT)
+
+    fun playCardPlayed() = enqueueEffect(Effect.CARD_PLAY)
 
     fun stopGame() {
         active = false
@@ -187,7 +191,7 @@ class GameAudioController {
         val level = 0.72 + 0.28 * sin(2.0 * PI * seconds / BREATH_SECONDS)
         val current = chordSample(CHORDS[chordIndex], seconds)
         val next = chordSample(CHORDS[nextChordIndex], seconds)
-        return (current * (1.0 - transition) + next * transition) * level * MUSIC_VOLUME
+        return (current * (1.0 - transition) + next * transition) * level * musicVolume
     }
 
     private fun chordSample(chord: DoubleArray, seconds: Double): Double {
@@ -200,7 +204,11 @@ class GameAudioController {
     }
 
     private fun effectSample(voice: Voice): Pair<Double, Boolean> {
-        val length = if (voice.effect == Effect.CARD_DRAW) DRAW_LENGTH else COLLECT_LENGTH
+        val length = when (voice.effect) {
+            Effect.CARD_DRAW -> DRAW_LENGTH
+            Effect.CARD_COLLECT -> COLLECT_LENGTH
+            Effect.CARD_PLAY -> PLAY_LENGTH
+        }
         if (voice.position >= length) return 0.0 to true
 
         val progress = voice.position.toDouble() / length
@@ -216,6 +224,11 @@ class GameAudioController {
                 val frequency = COLLECT_START_HZ + (COLLECT_END_HZ - COLLECT_START_HZ) * progress
                 val tone = sin(2.0 * PI * frequency * voice.position / SAMPLE_RATE)
                 (tone * COLLECT_TONE_LEVEL + nextNoise(voice) * COLLECT_NOISE_LEVEL) * envelope
+            }
+            Effect.CARD_PLAY -> {
+                val frequency = PLAY_START_HZ + (PLAY_END_HZ - PLAY_START_HZ) * progress
+                val tone = sin(2.0 * PI * frequency * voice.position / SAMPLE_RATE)
+                (tone * PLAY_TONE_LEVEL + nextNoise(voice) * PLAY_NOISE_LEVEL) * envelope
             }
         }
         voice.position++
@@ -245,6 +258,7 @@ class GameAudioController {
         private const val MUSIC_VOLUME = 0.10
         private const val DRAW_LENGTH = SAMPLE_RATE / 5
         private const val COLLECT_LENGTH = SAMPLE_RATE / 4
+        private const val PLAY_LENGTH = SAMPLE_RATE / 7
         private const val DRAW_START_HZ = 620.0
         private const val DRAW_END_HZ = 1120.0
         private const val DRAW_TONE_LEVEL = 0.42
@@ -253,6 +267,10 @@ class GameAudioController {
         private const val COLLECT_END_HZ = 290.0
         private const val COLLECT_TONE_LEVEL = 0.36
         private const val COLLECT_NOISE_LEVEL = 0.10
+        private const val PLAY_START_HZ = 760.0
+        private const val PLAY_END_HZ = 480.0
+        private const val PLAY_TONE_LEVEL = 0.30
+        private const val PLAY_NOISE_LEVEL = 0.06
         private val CHORDS = arrayOf(
             doubleArrayOf(130.81, 164.81, 196.00),
             doubleArrayOf(110.00, 130.81, 164.81),

@@ -1,0 +1,38 @@
+[
+    {
+        "merged": "com.gamebox.war.app-mergeDebugResources-33:/layout/presentation_table.xml",
+        "source": "com.gamebox.war.app-main-36:/layout/presentation_table.xml"
+    },
+    {
+        "merged": "com.gamebox.war.app-mergeDebugResources-33:/layout/screen_home.xml",
+        "source": "com.gamebox.war.app-main-36:/layout/screen_home.xml"
+    },
+    {
+        "merged": "com.gamebox.war.app-mergeDebugResources-33:/layout/presentation_taki_table.xml",
+        "source": "com.gamebox.war.app-main-36:/layout/presentation_taki_table.xml"
+    },
+    {
+        "merged": "com.gamebox.war.app-mergeDebugResources-33:/layout/fragment_taki_phone.xml",
+        "source": "com.gamebox.war.app-main-36:/layout/fragment_taki_phone.xml"
+    },
+    {
+        "merged": "com.gamebox.war.app-mergeDebugResources-33:/layout/item_game_catalog.xml",
+        "source": "com.gamebox.war.app-main-36:/layout/item_game_catalog.xml"
+    },
+    {
+        "merged": "com.gamebox.war.app-mergeDebugResources-33:/layout/activity_main.xml",
+        "source": "com.gamebox.war.app-main-36:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.gamebox.war.app-mergeDebugResources-33:/layout/screen_settings.xml",
+        "source": "com.gamebox.war.app-main-36:/layout/screen_settings.xml"
+    },
+    {
+        "merged": "com.gamebox.war.app-mergeDebugResources-33:/layout/item_spinner_dropdown.xml",
+        "source": "com.gamebox.war.app-main-36:/layout/item_spinner_dropdown.xml"
+    },
+    {
+        "merged": "com.gamebox.war.app-mergeDebugResources-33:/layout/screen_game_setup.xml",
+        "source": "com.gamebox.war.app-main-36:/layout/screen_game_setup.xml"
+    }
+]

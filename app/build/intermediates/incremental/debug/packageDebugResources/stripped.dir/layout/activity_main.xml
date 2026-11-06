@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#0F172A"
+    android:padding="16dp"
+    android:gravity="center_horizontal">
+
+    <Button
+        android:id="@+id/btnGameMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/back_to_games"
+        android:textAllCaps="false" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="מלחמה"
+        android:textColor="#F1F5F9"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:layout_marginTop="12dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="קופסת משחקים"
+        android:textColor="#94A3B8"
+        android:textSize="14sp"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:id="@+id/tvPrivatePlayerCount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:text="@string/private_player_card_count_initial"
+        android:textColor="#60A5FA"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvSeriesScore"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:text="@string/series_score_initial"
+        android:textColor="@color/text"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <!-- Scores -->
+    <LinearLayout
+        android:id="@+id/playerCounts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#1E293B"
+        android:padding="16dp"
+        android:layout_marginBottom="12dp">
+
+        <TextView
+            android:id="@+id/tvPlayerCount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="אתה: 26"
+            android:textColor="#60A5FA"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvCpuCount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="מחשב: 26"
+            android:textColor="#F87171"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:gravity="end" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="לחץ על שלוף קלף"
+        android:textColor="#F1F5F9"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="16dp"
+        android:minHeight="32dp" />
+
+    <!-- Cards area -->
+    <LinearLayout
+        android:id="@+id/cardArea"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="16dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginEnd="24dp">
+
+            <TextView
+                android:id="@+id/cardPlayer"
+                android:layout_width="100dp"
+                android:layout_height="140dp"
+                android:background="#FFFFFF"
+                android:gravity="center"
+                android:text="?"
+                android:textSize="32sp"
+                android:textStyle="bold"
+                android:textColor="#111111"
+                android:elevation="8dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="אתה"
+                android:textColor="#94A3B8"
+                android:layout_marginTop="8dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/cardCpu"
+                android:layout_width="100dp"
+                android:layout_height="140dp"
+                android:background="#FFFFFF"
+                android:gravity="center"
+                android:text="?"
+                android:textSize="32sp"
+                android:textStyle="bold"
+                android:textColor="#111111"
+                android:elevation="8dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="מחשב"
+                android:textColor="#94A3B8"
+                android:layout_marginTop="8dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvPublicMessageStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/public_message_needs_display"
+        android:textColor="#94A3B8"
+        android:textSize="12sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <AutoCompleteTextView
+            android:id="@+id/inputPublicMessage"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:contentDescription="@string/public_message_picker_description"
+            android:popupBackground="@color/card_bg"
+            android:hint="@string/public_message_hint"
+            android:imeOptions="actionSend"
+            android:inputType="textCapSentences|text"
+            android:maxLines="1"
+            android:maxLength="80"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:textColor="@color/text"
+            android:textColorHint="#94A3B8"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/btnSendPublicMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:enabled="false"
+            android:text="@string/send_to_public_screen"
+            android:textAllCaps="false" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnResetSeries"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginBottom="4dp"
+        android:text="@string/reset_series_score"
+        android:textAllCaps="false"
+        android:textSize="13sp" />
+
+    <TextView
+        android:id="@+id/tvDisplayStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="מסך חיצוני: לא מחובר"
+        android:textColor="#94A3B8"
+        android:textSize="13sp"
+        android:gravity="center"
+        android:layout_marginBottom="8dp" />
+
+    <Button
+        android:id="@+id/btnDraw"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="שלוף קלף"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:backgroundTint="#3B82F6"
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="8dp" />
+
+    <Button
+        android:id="@+id/btnNewGame"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="@string/next_war_game"
+        android:textSize="15sp"
+        android:backgroundTint="#334155"
+        android:textColor="#F1F5F9" />
+
+</LinearLayout>

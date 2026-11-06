@@ -24,6 +24,7 @@ hangman
 2048
 sudoku
 word search
+guess the letter
 
 ## Strategy games
 nim

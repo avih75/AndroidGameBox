@@ -83,6 +83,16 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/tvWinCounter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ניצחונות: אני 0 · מחשב 1 0 · מחשב 2 0"
+        android:textColor="#FBBF24"
+        android:textSize="12sp"
+        android:gravity="center"
+        android:layout_marginBottom="6dp" />
+
+    <TextView
         android:id="@+id/tvMessage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -138,6 +148,35 @@
             android:textColor="#FFFFFF"
             android:layout_marginStart="6dp"
             android:visibility="gone" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="6dp">
+
+        <Button
+            android:id="@+id/btnNewTakiGame"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:text="משחק חדש"
+            android:textSize="13sp"
+            android:backgroundTint="#0E7490"
+            android:textColor="#FFFFFF"
+            android:layout_marginEnd="4dp" />
+
+        <Button
+            android:id="@+id/btnResetTakiWins"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:text="איפוס ניצחונות"
+            android:textSize="13sp"
+            android:backgroundTint="#475569"
+            android:textColor="#FFFFFF"
+            android:layout_marginStart="4dp" />
     </LinearLayout>
 
 </LinearLayout>
