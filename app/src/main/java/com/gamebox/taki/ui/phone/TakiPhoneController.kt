@@ -31,12 +31,21 @@ class TakiPhoneController(
     private val tvPlayersSummary: TextView = root.findViewById(id("tvPlayersSummary"))
     private val tvWinCounter: TextView = root.findViewById(id("tvWinCounter"))
     private val tvMessage: TextView = root.findViewById(id("tvMessage"))
+    private val tvActionHistory: TextView = root.findViewById(id("tvActionHistory"))
     private val handContainer: LinearLayout = root.findViewById(id("handContainer"))
     private val btnDraw: Button = root.findViewById(id("btnDraw"))
     private val btnCloseTaki: Button = root.findViewById(id("btnCloseTaki"))
 
     private var lastPrivate: TakiPrivateState? = null
     private var lastPublic: TakiPublicState? = null
+    private val sharedInfoViews = listOf(
+        tvStatus,
+        tvPendingDraw,
+        tvTopCard.parent as View,
+        tvWinCounter,
+        tvMessage,
+        tvActionHistory
+    )
 
     init {
         btnDraw.setOnClickListener { onAction(TakiAction.Draw) }
@@ -52,10 +61,19 @@ class TakiPhoneController(
         lastPrivate = private
 
         // Status
+        val currentPlayerName = public.players.firstOrNull {
+            it.id == public.currentPlayerId
+        }?.name ?: "?"
         tvStatus.text = when {
-            public.isGameOver -> if (public.winnerId != null) "המשחק נגמר" else "הסתיים"
-            private.isMyTurn -> "תורך!"
-            else -> "ממתין..."
+            public.isGameOver -> "המשחק הסתיים"
+            private.isMyTurn -> if (private.mustPlaySameColor) {
+                "תורך — שחק עוד קלף ${colorName(public.currentColor)}"
+            } else if (private.mustDraw) {
+                "תורך — משוך ${public.pendingDraw} קלפים"
+            } else {
+                "תורך — אתה"
+            }
+            else -> "תור של $currentPlayerName"
         }
 
         if (public.pendingDraw > 0) {
@@ -75,7 +93,10 @@ class TakiPhoneController(
         tvWinCounter.text = "ניצחונות: " + public.players.joinToString(" · ") {
             "${it.name} ${winCounts[it.id] ?: 0}"
         }
-        tvMessage.text = public.lastActionMessage
+        tvMessage.text = public.lastActionMessage.ifEmpty { "המשחק מוכן" }
+        tvActionHistory.text = public.actionHistory.takeLast(6)
+            .asReversed()
+            .joinToString("\n") { "• $it" }
 
         // Hand
         handContainer.removeAllViews()
@@ -95,28 +116,42 @@ class TakiPhoneController(
                         onAction(TakiAction.PlayCard(card))
                     }
                 }
+
             }
             handContainer.addView(cardView)
         }
 
         // Buttons
         btnDraw.isEnabled = private.isMyTurn && (private.canDraw || private.mustDraw)
-        btnCloseTaki.visibility = if (public.isTakiOpen && private.isMyTurn) View.VISIBLE else View.GONE
+        btnCloseTaki.visibility =
+            if (public.isTakiOpen && !private.mustPlaySameColor && private.isMyTurn) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
+    }
+
+    fun setSharedInfoVisible(visible: Boolean) {
+        sharedInfoViews.forEach { it.visibility = if (visible) View.VISIBLE else View.GONE }
     }
 
     private fun makeCardView(card: TakiCard): FrameLayout {
         val face = FrameLayout(root.context).apply {
-            background = cardBackground(card.color, large = true)
+            background = GradientDrawable().apply {
+                setColor(0xFFFFFEFA.toInt())
+                cornerRadius = dp(12).toFloat()
+                setStroke(dp(2), inkColor(card.color))
+            }
             elevation = dp(5).toFloat()
             contentDescription = card.displayName()
         }
         val badge = TextView(root.context).apply {
-            text = cardSymbol(card)
+            text = "${cardSymbol(card)}  ${card.color?.let(::colorName) ?: "צבעים"}"
             textSize = 13f
-            setTextColor(Color.WHITE)
+            setTextColor(inkColor(card.color))
             setPadding(dp(6), dp(4), dp(6), dp(4))
             background = GradientDrawable().apply {
-                setColor(0x55000000)
+                setColor(0xFFF1F5F9.toInt())
                 cornerRadius = dp(8).toFloat()
             }
         }
@@ -130,23 +165,22 @@ class TakiPhoneController(
 
         val medallion = TextView(root.context).apply {
             text = cardSymbol(card)
-            textSize = if (card.isAction()) 19f else 34f
-            setTextColor(inkColor(card.color))
+            textSize = if (card.isAction()) 21f else 36f
+            setTextColor(Color.WHITE)
             gravity = Gravity.CENTER
             background = GradientDrawable().apply {
-                shape = GradientDrawable.OVAL
-                setColor(0xEFFFFFFF.toInt())
-                setStroke(dp(2), 0xAAFFFFFF.toInt())
+                setColor(inkColor(card.color))
+                cornerRadius = dp(12).toFloat()
             }
         }
-        face.addView(medallion, FrameLayout.LayoutParams(dp(58), dp(70), Gravity.CENTER))
+        face.addView(medallion, FrameLayout.LayoutParams(dp(56), dp(64), Gravity.CENTER))
 
         val caption = TextView(root.context).apply {
             text = cardLabel(card)
             textSize = 9f
-            setTextColor(Color.WHITE)
+            setTextColor(inkColor(card.color))
             gravity = Gravity.CENTER
-            setShadowLayer(3f, 0f, 1f, 0x99000000.toInt())
+            setTypeface(typeface, android.graphics.Typeface.BOLD)
         }
         face.addView(caption, FrameLayout.LayoutParams(
             FrameLayout.LayoutParams.MATCH_PARENT,
@@ -155,6 +189,16 @@ class TakiPhoneController(
         ).apply {
             setMargins(dp(4), 0, dp(4), dp(4))
         })
+        val lowerCorner = TextView(root.context).apply {
+            text = cardSymbol(card)
+            textSize = 12f
+            setTextColor(inkColor(card.color))
+            gravity = Gravity.CENTER
+        }
+        face.addView(lowerCorner, FrameLayout.LayoutParams(dp(24), dp(20), Gravity.BOTTOM or Gravity.END)
+            .apply {
+                setMargins(0, 0, dp(4), dp(20))
+            })
         return face
     }
 
@@ -183,7 +227,7 @@ class TakiPhoneController(
         TakiRank.EIGHT -> "8"
         TakiRank.NINE -> "9"
         TakiRank.PLUS_TWO -> "+2"
-        TakiRank.PLUS_THREE -> "+3"
+        TakiRank.PLUS -> "+"
         TakiRank.STOP -> "⊘"
         TakiRank.CHANGE_DIRECTION -> "↻"
         TakiRank.CHANGE_COLOR -> "✦"
@@ -196,7 +240,7 @@ class TakiPhoneController(
         TakiRank.CHANGE_COLOR -> "שנה צבע"
         TakiRank.TAKI -> "טאקי"
         TakiRank.PLUS_TWO -> "משוך 2"
-        TakiRank.PLUS_THREE -> "משוך 3"
+        TakiRank.PLUS -> "שחק עוד"
         else -> "קלף מספר ${cardSymbol(card)}"
     }
 

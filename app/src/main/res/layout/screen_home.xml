@@ -44,4 +44,13 @@
         android:text="@string/settings"
         android:textAllCaps="false" />
 
+    <TextView
+        android:id="@+id/tvAppVersion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingTop="6dp"
+        android:textColor="#64748B"
+        android:textSize="12sp" />
+
 </LinearLayout>

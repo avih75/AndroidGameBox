@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.Display
 import android.view.Gravity
+import android.view.ViewGroup
 import android.graphics.drawable.GradientDrawable
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -34,6 +35,7 @@ class TakiTablePresentation(
         setContentView(context.resources.getIdentifier(
             "presentation_taki_table", "layout", context.packageName
         ).let { if (it != 0) it else android.R.layout.simple_list_item_1 })
+        window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
 
         // In real project use ViewBinding or findViewById with R.id
         // Here we keep it resilient for copy-paste
@@ -68,6 +70,12 @@ class TakiTablePresentation(
         tvMessage?.text = public.lastActionMessage.ifEmpty {
             if (public.isGameOver) "המשחק נגמר" else "תור של ${public.players.firstOrNull { it.id == public.currentPlayerId }?.name ?: ""}"
         }
+        window?.decorView
+            ?.findViewById<TextView>(context.resources.getIdentifier("tvAppVersion", "id", context.packageName))
+            ?.text = context.getString(
+                com.gamebox.war.R.string.app_version_label,
+                com.gamebox.war.BuildConfig.VERSION_NAME
+            )
 
         // Players summary
         playersRow?.removeAllViews()
@@ -108,7 +116,7 @@ class TakiTablePresentation(
         TakiRank.EIGHT -> "8"
         TakiRank.NINE -> "9"
         TakiRank.PLUS_TWO -> "+2"
-        TakiRank.PLUS_THREE -> "+3"
+        TakiRank.PLUS -> "+"
         TakiRank.STOP -> "⊘"
         TakiRank.CHANGE_DIRECTION -> "↻"
         TakiRank.CHANGE_COLOR -> "✦"

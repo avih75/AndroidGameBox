@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.hardware.display.DisplayManager
 import android.os.Build
 import android.os.Bundle
@@ -33,6 +34,7 @@ import com.gamebox.taki.ui.nearby.TakiMessageCodec
 import org.json.JSONException
 import org.json.JSONObject
 import java.nio.charset.StandardCharsets
+import kotlin.random.Random
 
 class TakiHostActivity : Activity() {
 
@@ -375,10 +377,11 @@ class TakiHostActivity : Activity() {
             recordWinnerIfNeeded(updated)
             render()
             maybePlayAi()
-        }, AI_TURN_DELAY_MS)
+        }, Random.nextLong(AI_TURN_MIN_DELAY_MS, AI_TURN_MAX_DELAY_MS + 1))
     }
 
     private fun render() {
+        phoneController?.setSharedInfoVisible(presentation == null)
         if (role == SessionRole.CLIENT) {
             val public = clientPublicState ?: return
             val private = clientPrivateState ?: return
@@ -550,6 +553,8 @@ class TakiHostActivity : Activity() {
         setContentView(layoutId)
         val root = findViewById<View>(android.R.id.content)
         phoneController = TakiPhoneController(root, ::onPlayerAction)
+        root.findViewById<TextView>(viewId("tvAppVersion")).text =
+            getString(com.gamebox.war.R.string.app_version_label, com.gamebox.war.BuildConfig.VERSION_NAME)
         root.findViewById<Button>(viewId("btnNewTakiGame")).setOnClickListener {
             when (role) {
                 SessionRole.CLIENT -> Toast.makeText(this, "המארח שולט במשחק הבא", Toast.LENGTH_SHORT).show()
@@ -636,6 +641,7 @@ class TakiHostActivity : Activity() {
             updateLobby("מחפש משחקי טאקי בקרבת מקום...", actionEnabled = true)
             return
         }
+
         updateLobby("בחר משחק כדי להצטרף:", actionEnabled = false)
         discoveredEndpoints.forEach { (endpointId, endpointName) ->
             lobbyOptions?.addView(Button(this).apply {
@@ -647,6 +653,38 @@ class TakiHostActivity : Activity() {
                 }
             })
         }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        if (role == SessionRole.HOST && !gameStarted) {
+            showLobbyScreen(
+                title = "מארחים משחק טאקי",
+                message = "מחפש שחקנים בקרבת מקום...",
+                actionLabel = "התחל משחק",
+                actionEnabled = remotePlayerIds.isNotEmpty(),
+                onAction = ::startNetworkHostGame,
+                onCancel = ::leaveNetworkLobby
+            )
+            refreshHostLobby()
+        } else if (role == SessionRole.CLIENT && !gameStarted) {
+            showLobbyScreen(
+                title = "הצטרפות למשחק",
+                message = "מחפש משחקי טאקי בקרבת מקום...",
+                actionLabel = "סרוק שוב",
+                onAction = {
+                    discoveredEndpoints.clear()
+                    nearbySession?.startDiscovery()
+                    refreshDiscoveredDevices()
+                },
+                onCancel = ::leaveNetworkLobby
+            )
+            refreshDiscoveredDevices()
+        } else {
+            showGameUi()
+            render()
+        }
+        checkExternalDisplay()
     }
 
     private fun leaveNetworkLobby() {
@@ -717,14 +755,25 @@ class TakiHostActivity : Activity() {
         val displays = dm.getDisplays(DisplayManager.DISPLAY_CATEGORY_PRESENTATION)
         val secondary = displays.firstOrNull()
             ?: dm.displays.firstOrNull { it.displayId != Display.DEFAULT_DISPLAY }
-        if (secondary != null) {
-            try {
-                presentation?.dismiss()
-                presentation = TakiTablePresentation(this, secondary).also { it.show() }
-                render()
-            } catch (error: RuntimeException) {
-                Log.e(TAG, "Unable to show Taki on external display", error)
-            }
+        if (secondary == null) {
+            presentation?.dismiss()
+            presentation = null
+            phoneController?.setSharedInfoVisible(true)
+            return
+        }
+
+        try {
+            presentation?.dismiss()
+            val newPresentation = TakiTablePresentation(this, secondary)
+            newPresentation.show()
+            presentation = newPresentation
+            phoneController?.setSharedInfoVisible(false)
+            render()
+        } catch (error: RuntimeException) {
+            presentation?.dismiss()
+            presentation = null
+            phoneController?.setSharedInfoVisible(true)
+            Log.e(TAG, "Unable to show Taki on external display", error)
         }
     }
 
@@ -735,6 +784,7 @@ class TakiHostActivity : Activity() {
     override fun onResume() {
         super.onResume()
         if (gameStarted) startAudio()
+        checkExternalDisplay()
     }
 
     override fun onPause() {
@@ -758,7 +808,8 @@ class TakiHostActivity : Activity() {
         private const val TAG = "TakiHostActivity"
         private const val DEFAULT_PLAYER_COUNT = 3
         private const val REQUEST_NEARBY_PERMISSIONS = 701
-        private const val AI_TURN_DELAY_MS = 700L
+        private const val AI_TURN_MIN_DELAY_MS = 2_000L
+        private const val AI_TURN_MAX_DELAY_MS = 4_000L
         private const val TAKI_MUSIC_VOLUME = 0.025
         private const val TAKI_SERVICE_ID = "com.gamebox.taki"
         private const val SCORE_PREFERENCES = "taki_scores"

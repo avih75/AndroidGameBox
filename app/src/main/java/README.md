@@ -17,9 +17,9 @@ Pure Kotlin game logic for Taki – no Android dependencies.
 ## Rules included in v1
 
 - Numbers 1–9 (two of each color)
-- +2, +3, Stop, Reverse, Change Color, Taki
+- +2, + (play another same-color card), Stop, Reverse, Change Color, Taki
 - No Super Taki
-- +2 / +3 stack
+- +2 stacks and passes the draw penalty to the next player
 - Open Taki sequence (same color) → player closes it
 - 8 cards dealt to each player
 

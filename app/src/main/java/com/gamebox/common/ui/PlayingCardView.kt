@@ -80,14 +80,46 @@ class PlayingCardView @JvmOverloads constructor(
         drawText(canvas, cornerText, ink, height * 0.17f, width * 0.16f, height * 0.12f)
         canvas.restore()
 
-        drawText(
-            canvas,
-            faceSuit,
-            ink,
-            height * 0.40f,
-            width / 2f,
-            height * 0.60f
-        )
+        val rankValue = faceRank.toIntOrNull()
+        if (rankValue != null && rankValue in 2..10) {
+            drawPips(canvas, ink, rankValue)
+        } else {
+            drawText(
+                canvas,
+                faceSuit,
+                ink,
+                height * 0.40f,
+                width / 2f,
+                height * 0.60f
+            )
+            if (faceRank in listOf("J", "Q", "K")) {
+                drawText(canvas, faceRank, ink, height * 0.23f, width / 2f, height * 0.77f)
+            }
+        }
+    }
+
+    private fun drawPips(canvas: Canvas, color: Int, count: Int) {
+        val positions = when (count) {
+            2 -> listOf(.5f to .28f, .5f to .72f)
+            3 -> listOf(.5f to .22f, .5f to .5f, .5f to .78f)
+            4 -> listOf(.32f to .28f, .68f to .28f, .32f to .72f, .68f to .72f)
+            5 -> listOf(.32f to .24f, .68f to .24f, .5f to .5f, .32f to .76f, .68f to .76f)
+            6 -> listOf(.32f to .2f, .68f to .2f, .32f to .5f, .68f to .5f, .32f to .8f, .68f to .8f)
+            7 -> listOf(.32f to .18f, .68f to .18f, .32f to .41f, .68f to .41f, .5f to .59f, .32f to .82f, .68f to .82f)
+            8 -> listOf(.32f to .16f, .68f to .16f, .32f to .39f, .68f to .39f, .32f to .61f, .68f to .61f, .32f to .84f, .68f to .84f)
+            9 -> listOf(.32f to .14f, .68f to .14f, .32f to .32f, .68f to .32f, .5f to .5f, .32f to .68f, .68f to .68f, .32f to .86f, .68f to .86f)
+            else -> listOf(.32f to .12f, .68f to .12f, .32f to .31f, .68f to .31f, .32f to .5f, .68f to .5f, .32f to .69f, .68f to .69f, .32f to .88f, .68f to .88f)
+        }
+        positions.forEach { (x, y) ->
+            val centerX = width * x
+            val centerY = height * y
+            if (y > .5f) {
+                canvas.save()
+                canvas.rotate(180f, centerX, centerY)
+            }
+            drawText(canvas, suit ?: "", color, height * .105f, centerX, centerY)
+            if (y > .5f) canvas.restore()
+        }
     }
 
     private fun drawBack(canvas: Canvas, corner: Float) {

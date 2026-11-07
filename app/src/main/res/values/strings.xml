@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">קופסת משחקים</string>
+    <string name="app_version_label">גרסה %1$s</string>
     <string name="home_subtitle">בחר משחק כדי להתחיל</string>
     <string name="settings">הגדרות</string>
     <string name="back_to_games">חזרה למשחקים</string>

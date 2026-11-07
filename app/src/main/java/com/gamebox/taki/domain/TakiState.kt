@@ -11,12 +11,15 @@ data class TakiState(
     val currentColor: TakiColor,          // after Change Color this can differ from topCard.color
     val drawPile: List<TakiCard>,
     val discardPile: List<TakiCard>,      // includes topCard as last element
-    val pendingDraw: Int = 0,             // accumulated +2 / +3
+    val pendingDraw: Int = 0,
     val isTakiOpen: Boolean = false,      // currently inside a Taki sequence
     val takiColor: TakiColor? = null,     // color of the open Taki
+    val isPlusOpen: Boolean = false,      // the player must play one more card of this color
+    val plusColor: TakiColor? = null,
     val winnerId: String? = null,
     val isGameOver: Boolean = false,
-    val lastActionMessage: String = ""
+    val lastActionMessage: String = "",
+    val actionHistory: List<String> = emptyList()
 ) {
     val currentPlayer: TakiPlayer get() = players[currentPlayerIndex]
 
@@ -28,18 +31,24 @@ data class TakiState(
         currentColor = currentColor,
         pendingDraw = pendingDraw,
         isTakiOpen = isTakiOpen,
+        isPlusOpen = isPlusOpen,
         winnerId = winnerId,
         isGameOver = isGameOver,
-        lastActionMessage = lastActionMessage
+        lastActionMessage = lastActionMessage,
+        actionHistory = actionHistory
     )
 
     fun privateStateFor(playerId: String): TakiPrivateState {
         val player = players.first { it.id == playerId }
         return TakiPrivateState(
             hand = player.hand,
-            canDraw = pendingDraw == 0 && !isTakiOpen,
+            canDraw = pendingDraw == 0 && !isTakiOpen &&
+                (!isPlusOpen || player.hand.none {
+                    it.color == plusColor && it.rank != TakiRank.CHANGE_COLOR
+                }),
             mustDraw = pendingDraw > 0,
-            isMyTurn = currentPlayer.id == playerId && !isGameOver
+            isMyTurn = currentPlayer.id == playerId && !isGameOver,
+            mustPlaySameColor = isPlusOpen
         )
     }
 }
@@ -55,9 +64,11 @@ data class TakiPublicState(
     val currentColor: TakiColor,
     val pendingDraw: Int,
     val isTakiOpen: Boolean,
+    val isPlusOpen: Boolean,
     val winnerId: String?,
     val isGameOver: Boolean,
-    val lastActionMessage: String
+    val lastActionMessage: String,
+    val actionHistory: List<String>
 )
 
 data class TakiPublicPlayer(
@@ -72,5 +83,6 @@ data class TakiPrivateState(
     val hand: List<TakiCard>,
     val canDraw: Boolean,
     val mustDraw: Boolean,
-    val isMyTurn: Boolean
+    val isMyTurn: Boolean,
+    val mustPlaySameColor: Boolean
 )

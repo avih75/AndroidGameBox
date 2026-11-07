@@ -7,11 +7,11 @@ import kotlin.random.Random
  * Host runs this. Clients never call it.
  *
  * Simplified rules (v1):
- * - Numbers 1-9, +2, Stop, Reverse, Change Color, Taki, +3
+ * - Numbers 1-9, +2, +, Stop, Reverse, Change Color, Taki
  * - No Super Taki
  * - Taki opens a sequence of same color; player closes it when done
- * - +2 / +3 stack
- * - Must draw when pendingDraw > 0 (or play another +2/+3)
+ * - +2 stacks and passes the draw penalty to the next player
+ * - Must draw when pendingDraw > 0 (or stack another +2)
  */
 class TakiEngine(
     private val random: Random = Random.Default
@@ -60,7 +60,8 @@ class TakiEngine(
             currentColor = top.color!!,
             drawPile = remaining,
             discardPile = listOf(top),
-            lastActionMessage = "המשחק התחיל"
+            lastActionMessage = "המשחק התחיל",
+            actionHistory = listOf("המשחק התחיל")
         )
     }
 
@@ -81,11 +82,14 @@ class TakiEngine(
     private fun playCard(state: TakiState, card: TakiCard, chosenColor: TakiColor?): TakiState {
         val player = state.currentPlayer
         if (card !in player.hand) return state
+        if (card.rank == TakiRank.PLUS && !player.hand.any {
+                it != card && it.color == card.color && it.rank != TakiRank.CHANGE_COLOR
+            } && player.hand.count { it == card } < 2
+        ) return state
 
-        // Must respond to pending draw with another +2 / +3 or draw
+        // A draw penalty can only be passed on with another +2.
         if (state.pendingDraw > 0) {
-            val isPlus = card.rank == TakiRank.PLUS_TWO || card.rank == TakiRank.PLUS_THREE
-            if (!isPlus) return state
+            if (card.rank != TakiRank.PLUS_TWO) return state
         }
 
         if (!isLegalPlay(state, card)) return state
@@ -99,52 +103,67 @@ class TakiEngine(
             TakiRank.PLUS_TWO -> newState.copy(
                 pendingDraw = newState.pendingDraw + 2,
                 currentColor = card.color!!,
-                lastActionMessage = "${player.name} שם +2"
-            )
-            TakiRank.PLUS_THREE -> newState.copy(
-                pendingDraw = newState.pendingDraw + 3,
-                currentColor = card.color!!,
-                lastActionMessage = "${player.name} שם +3"
-            )
+                isTakiOpen = false,
+                takiColor = null,
+                isPlusOpen = false,
+                plusColor = null
+            ).withMessage("${player.name} שם +2 — ${newState.pendingDraw} קלפים ממתינים לתור הבא")
+                .advanceTurn()
             TakiRank.STOP -> newState.copy(
                 currentColor = card.color!!,
-                lastActionMessage = "${player.name} שם עצור"
-            ).advanceTurn().advanceTurn() // skip next
+                isTakiOpen = false,
+                takiColor = null,
+                isPlusOpen = false,
+                plusColor = null
+            ).withMessage("${player.name} שם עצור — השחקן הבא מדלג על תורו")
+                .advanceTurn().advanceTurn()
             TakiRank.CHANGE_DIRECTION -> {
                 val newDir = if (newState.direction == Direction.CLOCKWISE)
                     Direction.COUNTER_CLOCKWISE else Direction.CLOCKWISE
                 newState.copy(
                     direction = newDir,
                     currentColor = card.color!!,
-                    lastActionMessage = "${player.name} שינה כיוון"
-                ).advanceTurn()
+                    isTakiOpen = false,
+                    takiColor = null,
+                    isPlusOpen = false,
+                    plusColor = null
+                ).withMessage("${player.name} שינה כיוון").advanceTurn()
             }
             TakiRank.CHANGE_COLOR -> {
                 val color = chosenColor ?: TakiColor.RED
                 newState.copy(
                     currentColor = color,
-                    lastActionMessage = "${player.name} שינה צבע ל-$color"
-                ).advanceTurn()
+                    isTakiOpen = false,
+                    takiColor = null,
+                    isPlusOpen = false,
+                    plusColor = null
+                ).withMessage("${player.name} שינה צבע ל-${colorName(color)}").advanceTurn()
             }
             TakiRank.TAKI -> newState.copy(
                 isTakiOpen = true,
                 takiColor = card.color,
-                currentColor = card.color!!,
-                lastActionMessage = "${player.name} פתח טאקי"
-            )
+                isPlusOpen = false,
+                plusColor = null,
+                currentColor = card.color!!
+            ).withMessage("${player.name} פתח טאקי ${colorName(card.color!!)}")
+            TakiRank.PLUS -> newState.copy(
+                isPlusOpen = true,
+                plusColor = card.color,
+                currentColor = card.color!!
+            ).withMessage("${player.name} שם + — שחק עוד קלף ${colorName(card.color!!)}")
             // number cards
             else -> {
-                if (newState.isTakiOpen) {
-                    // still inside Taki – same color only, turn does not advance yet
-                    newState.copy(
-                        currentColor = card.color!!,
-                        lastActionMessage = "${player.name} שם ${card.displayName()}"
-                    )
+                val next = newState.copy(
+                    currentColor = card.color!!,
+                    isPlusOpen = false,
+                    plusColor = null
+                ).withMessage("${player.name} שם ${card.displayName()}")
+                if (newState.isPlusOpen) {
+                    if (newState.isTakiOpen) next else next.advanceTurn()
+                } else if (newState.isTakiOpen) {
+                    next
                 } else {
-                    newState.copy(
-                        currentColor = card.color!!,
-                        lastActionMessage = "${player.name} שם ${card.displayName()}"
-                    ).advanceTurn()
+                    next.advanceTurn()
                 }
             }
         }
@@ -152,10 +171,9 @@ class TakiEngine(
         // Win check
         val updatedPlayer = newState.players.first { it.id == player.id }
         if (updatedPlayer.hand.isEmpty()) {
-            return newState.copy(
+            return newState.withMessage("${player.name} ניצח!").copy(
                 isGameOver = true,
-                winnerId = player.id,
-                lastActionMessage = "${player.name} ניצח!"
+                winnerId = player.id
             )
         }
 
@@ -163,10 +181,14 @@ class TakiEngine(
     }
 
     private fun draw(state: TakiState): TakiState {
-        if (state.isTakiOpen) return state // must close or play
+        if (state.isTakiOpen) return state
+        if (state.isPlusOpen && state.currentPlayer.hand.any {
+                it.color == state.plusColor && it.rank != TakiRank.CHANGE_COLOR
+            }
+        ) return state
 
         val amount = if (state.pendingDraw > 0) state.pendingDraw else 1
-        var (newDrawPile, drawn) = drawCards(state.drawPile, state.discardPile, amount)
+        val (newDrawPile, drawn) = drawCards(state.drawPile, state.discardPile, amount)
 
         val newPlayers = state.players.map { p ->
             if (p.id == state.currentPlayer.id) p.copy(hand = p.hand + drawn) else p
@@ -176,22 +198,41 @@ class TakiEngine(
             players = newPlayers,
             drawPile = newDrawPile,
             pendingDraw = 0,
-            lastActionMessage = "${state.currentPlayer.name} משך $amount קלפים"
+            isTakiOpen = false,
+            takiColor = null,
+            isPlusOpen = false,
+            plusColor = null
+        ).withMessage(
+            if (state.pendingDraw > 0) {
+                "${state.currentPlayer.name} משך $amount קלפים אחרי +2"
+            } else {
+                "${state.currentPlayer.name} משך קלף"
+            }
         ).advanceTurn()
     }
 
     private fun closeTaki(state: TakiState): TakiState {
-        if (!state.isTakiOpen) return state
+        if (!state.isTakiOpen || state.isPlusOpen) return state
         return state.copy(
             isTakiOpen = false,
-            takiColor = null,
-            lastActionMessage = "${state.currentPlayer.name} סגר טאקי"
-        ).advanceTurn()
+            takiColor = null
+        ).withMessage("${state.currentPlayer.name} סגר טאקי").advanceTurn()
     }
 
     private fun isLegalPlay(state: TakiState, card: TakiCard): Boolean {
+        if (state.pendingDraw > 0) {
+            return card.rank == TakiRank.PLUS_TWO
+        }
+        if (card.rank == TakiRank.PLUS &&
+            state.currentPlayer.hand.count { it == card } < 2 &&
+            state.currentPlayer.hand.none {
+                it != card && it.color == card.color && it.rank != TakiRank.CHANGE_COLOR
+            }
+        ) return false
+        if (state.isPlusOpen) {
+            return card.color == state.plusColor && card.rank != TakiRank.CHANGE_COLOR
+        }
         if (state.isTakiOpen) {
-            // only same color as the open Taki
             return card.color == state.takiColor && card.rank != TakiRank.CHANGE_COLOR
         }
 
@@ -221,6 +262,19 @@ class TakiEngine(
         val delta = if (direction == Direction.CLOCKWISE) 1 else -1
         val next = (currentPlayerIndex + delta + players.size) % players.size
         return copy(currentPlayerIndex = next)
+    }
+
+    private fun TakiState.withMessage(message: String): TakiState =
+        copy(
+            lastActionMessage = message,
+            actionHistory = (actionHistory + message).takeLast(ACTION_HISTORY_LIMIT)
+        )
+
+    private fun colorName(color: TakiColor): String = when (color) {
+        TakiColor.RED -> "אדום"
+        TakiColor.GREEN -> "ירוק"
+        TakiColor.BLUE -> "כחול"
+        TakiColor.YELLOW -> "צהוב"
     }
 
     private fun drawCards(
@@ -257,18 +311,22 @@ class TakiEngine(
                 cards += TakiCard(color, r)
                 cards += TakiCard(color, r) // two copies
             }
-            // actions
+            // +2, stop, reverse, +, and Taki actions
             cards += TakiCard(color, TakiRank.PLUS_TWO)
             cards += TakiCard(color, TakiRank.PLUS_TWO)
             cards += TakiCard(color, TakiRank.STOP)
             cards += TakiCard(color, TakiRank.STOP)
             cards += TakiCard(color, TakiRank.CHANGE_DIRECTION)
+            cards += TakiCard(color, TakiRank.PLUS)
             cards += TakiCard(color, TakiRank.TAKI)
-            cards += TakiCard(color, TakiRank.PLUS_THREE)
         }
-        // wilds
+        // Color wilds
         repeat(4) { cards += TakiCard(null, TakiRank.CHANGE_COLOR) }
 
         return cards.shuffled(random)
+    }
+
+    companion object {
+        private const val ACTION_HISTORY_LIMIT = 6
     }
 }

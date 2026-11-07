@@ -77,8 +77,15 @@ class WarMultiplayerEngine {
             val nextShowdown = mutableListOf<WarMultiplayerPlayer>()
             tied.forEach { player ->
                 val deck = decks.getValue(player.id)
-                if (deck.isNotEmpty()) pot += deck.removeAt(0)
-                if (deck.isNotEmpty()) nextShowdown += player
+                repeat(WAR_FACE_DOWN_CARDS) {
+                    if (deck.isNotEmpty()) pot += deck.removeAt(0)
+                }
+                if (deck.isNotEmpty()) {
+                    val comparisonCard = deck.removeAt(0)
+                    pot += comparisonCard
+                    lastCards[player.id] = comparisonCard
+                    nextShowdown += player
+                }
             }
             if (nextShowdown.isEmpty()) {
                 roundWinner = tied.first()
@@ -89,11 +96,6 @@ class WarMultiplayerEngine {
                 continue
             }
 
-            nextShowdown.forEach { player ->
-                val card = decks.getValue(player.id).removeAt(0)
-                pot += card
-                lastCards[player.id] = card
-            }
             contenders = nextShowdown
         }
 
@@ -146,5 +148,6 @@ class WarMultiplayerEngine {
     companion object {
         const val MIN_PLAYERS = 2
         const val MAX_PLAYERS = 6
+        private const val WAR_FACE_DOWN_CARDS = 2
     }
 }

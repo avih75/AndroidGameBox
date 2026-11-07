@@ -81,6 +81,8 @@ object TakiMessageCodec {
                     .put("currentColor", public.currentColor.name)
                     .put("pendingDraw", public.pendingDraw)
                     .put("isTakiOpen", public.isTakiOpen)
+                    .put("isPlusOpen", public.isPlusOpen)
+                    .put("actionHistory", JSONArray(public.actionHistory))
                     .put("winnerId", public.winnerId ?: JSONObject.NULL)
                     .put("isGameOver", public.isGameOver)
                     .put("lastActionMessage", public.lastActionMessage)
@@ -94,6 +96,7 @@ object TakiMessageCodec {
                     .put("canDraw", private.canDraw)
                     .put("mustDraw", private.mustDraw)
                     .put("isMyTurn", private.isMyTurn)
+                    .put("mustPlaySameColor", private.mustPlaySameColor)
             )
             .put("wins", winObject)
             .toBytes()
@@ -120,9 +123,13 @@ object TakiMessageCodec {
             currentColor = TakiColor.valueOf(json.getString("currentColor")),
             pendingDraw = json.getInt("pendingDraw"),
             isTakiOpen = json.getBoolean("isTakiOpen"),
+            isPlusOpen = json.getBoolean("isPlusOpen"),
             winnerId = winner,
             isGameOver = json.getBoolean("isGameOver"),
-            lastActionMessage = json.getString("lastActionMessage")
+            lastActionMessage = json.getString("lastActionMessage"),
+            actionHistory = json.getJSONArray("actionHistory").let { history ->
+                (0 until history.length()).map { history.getString(it) }.takeLast(6)
+            }
         )
     }
 
@@ -133,7 +140,8 @@ object TakiMessageCodec {
             hand = (0 until hand.length()).map { cardFromJson(hand.getJSONObject(it)) },
             canDraw = json.getBoolean("canDraw"),
             mustDraw = json.getBoolean("mustDraw"),
-            isMyTurn = json.getBoolean("isMyTurn")
+            isMyTurn = json.getBoolean("isMyTurn"),
+            mustPlaySameColor = json.getBoolean("mustPlaySameColor")
         )
     }
 

@@ -11,19 +11,24 @@ class TakiAi {
         val hand = private.hand
 
         if (state.pendingDraw > 0) {
-            val plus = hand.firstOrNull {
-                it.rank == TakiRank.PLUS_TWO || it.rank == TakiRank.PLUS_THREE
-            }
+            val plus = hand.firstOrNull { it.rank == TakiRank.PLUS_TWO }
             return if (plus != null) TakiAction.PlayCard(plus) else TakiAction.Draw
         }
 
-        if (state.isTakiOpen) {
-            val sameColor = hand.filter { it.color == state.takiColor && it.rank != TakiRank.CHANGE_COLOR }
-            return if (sameColor.isNotEmpty()) {
-                TakiAction.PlayCard(sameColor.first())
-            } else {
-                TakiAction.CloseTaki
+        if (state.isPlusOpen) {
+            val sameColor = hand.firstOrNull {
+                it.color == state.plusColor && it.rank != TakiRank.CHANGE_COLOR
             }
+            return sameColor?.let { TakiAction.PlayCard(it) } ?: TakiAction.Draw
+        }
+
+        if (state.isTakiOpen) {
+            val sameColor = hand.filter {
+                it.color == state.takiColor &&
+                    it.rank != TakiRank.CHANGE_COLOR &&
+                    isLegal(state, it)
+            }
+            return sameColor.firstOrNull()?.let { TakiAction.PlayCard(it) } ?: TakiAction.CloseTaki
         }
 
         // Prefer action cards that match

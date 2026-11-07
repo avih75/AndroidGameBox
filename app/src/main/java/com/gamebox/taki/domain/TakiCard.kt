@@ -17,7 +17,7 @@ enum class TakiRank {
     CHANGE_DIRECTION,
     CHANGE_COLOR,
     TAKI,           // Open Taki sequence
-    PLUS_THREE      // King (+3)
+    PLUS,           // Play another card of the same color
 }
 
 data class TakiCard(
@@ -28,11 +28,11 @@ data class TakiCard(
         val colorName = color?.name?.lowercase()?.replaceFirstChar { it.uppercase() } ?: "Wild"
         return when (rank) {
             TakiRank.PLUS_TWO -> "+2 $colorName"
+            TakiRank.PLUS -> "+ $colorName"
             TakiRank.STOP -> "Stop $colorName"
             TakiRank.CHANGE_DIRECTION -> "Reverse $colorName"
             TakiRank.CHANGE_COLOR -> "Change Color"
             TakiRank.TAKI -> "Taki $colorName"
-            TakiRank.PLUS_THREE -> "+3 $colorName"
             else -> "${rank.name.removePrefix("ONE").ifEmpty { "1" }.lowercase().replaceFirstChar { it.uppercase() }} $colorName"
                 .replace("One", "1")
                 .replace("Two", "2")
@@ -47,7 +47,7 @@ data class TakiCard(
     }
 
     fun isAction(): Boolean = rank in listOf(
-        TakiRank.PLUS_TWO, TakiRank.STOP, TakiRank.CHANGE_DIRECTION,
-        TakiRank.CHANGE_COLOR, TakiRank.TAKI, TakiRank.PLUS_THREE
+        TakiRank.PLUS_TWO, TakiRank.PLUS, TakiRank.STOP, TakiRank.CHANGE_DIRECTION,
+        TakiRank.CHANGE_COLOR, TakiRank.TAKI
     )
 }

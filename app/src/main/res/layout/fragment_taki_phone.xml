@@ -102,6 +102,18 @@
         android:gravity="center"
         android:layout_marginBottom="6dp" />
 
+    <TextView
+        android:id="@+id/tvActionHistory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="6"
+        android:padding="8dp"
+        android:background="#1E293B"
+        android:textColor="#CBD5E1"
+        android:textSize="11sp"
+        android:gravity="start"
+        android:layout_marginBottom="6dp" />
+
     <!-- Hand – horizontal scroll of cards -->
     <HorizontalScrollView
         android:layout_width="match_parent"
@@ -178,5 +190,13 @@
             android:textColor="#FFFFFF"
             android:layout_marginStart="4dp" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvAppVersion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:textColor="#64748B"
+        android:textSize="10sp" />
 
 </LinearLayout>

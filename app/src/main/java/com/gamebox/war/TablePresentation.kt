@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.Display
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import com.gamebox.common.ui.PlayingCardView
 import androidx.core.content.ContextCompat
@@ -25,6 +26,7 @@ class TablePresentation(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.presentation_table)
+        window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
 
         tvPlayerCount = findViewById(R.id.tvPlayerCount)
         tvCpuCount = findViewById(R.id.tvCpuCount)
@@ -33,6 +35,8 @@ class TablePresentation(
         tvMessage = findViewById(R.id.tvMessage)
         tvSeriesScore = findViewById(R.id.tvSeriesScore)
         tvPublicMessage = findViewById(R.id.tvPublicMessage)
+        findViewById<TextView>(R.id.tvAppVersion).text =
+            context.getString(R.string.app_version_label, BuildConfig.VERSION_NAME)
     }
 
     fun update(

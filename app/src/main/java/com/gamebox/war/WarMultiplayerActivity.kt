@@ -5,6 +5,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.pm.PackageManager
 import android.hardware.display.DisplayManager
+import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -299,6 +300,12 @@ class WarMultiplayerActivity : Activity() {
             setTextColor(0xFFF1F5F9.toInt())
             gravity = Gravity.CENTER
         })
+        root.addView(TextView(this).apply {
+            text = getString(R.string.app_version_label, BuildConfig.VERSION_NAME)
+            textSize = 11f
+            setTextColor(0xFF64748B.toInt())
+            gravity = Gravity.CENTER
+        })
         val status = TextView(this).apply {
             textSize = 17f
             setTextColor(0xFFFDE68A.toInt())
@@ -367,7 +374,12 @@ class WarMultiplayerActivity : Activity() {
         }
         val list = root.findViewWithTag<LinearLayout>(PLAYER_LIST_TAG) ?: return
         list.removeAllViews()
-        players.chunked(2).forEach { rowPlayers ->
+        val isLandscape =
+            resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+        val columns = if (isLandscape) 3 else 2
+        val cardWidth = if (isLandscape) 66 else 82
+        val cardHeight = if (isLandscape) 92 else 114
+        players.chunked(columns).forEach { rowPlayers ->
             val row = LinearLayout(this).apply {
                 orientation = LinearLayout.HORIZONTAL
                 gravity = Gravity.CENTER
@@ -404,14 +416,14 @@ class WarMultiplayerActivity : Activity() {
                     gravity = Gravity.CENTER
                 }
                 column.addView(name)
-                column.addView(cardView, LinearLayout.LayoutParams(dp(82), dp(114)).apply {
+                column.addView(cardView, LinearLayout.LayoutParams(dp(cardWidth), dp(cardHeight)).apply {
                     topMargin = dp(6)
                     bottomMargin = dp(6)
                 })
                 column.addView(count)
                 row.addView(column)
             }
-            if (rowPlayers.size == 1) {
+            repeat(columns - rowPlayers.size) {
                 row.addView(View(this), LinearLayout.LayoutParams(0, 1, 1f))
             }
             list.addView(row)
@@ -434,6 +446,50 @@ class WarMultiplayerActivity : Activity() {
                 message
             )
         }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        if (gameStarted) {
+            showGameTable()
+            if (role == Role.HOST) {
+                presentation?.dismiss()
+                presentation = null
+                showExternalPresentation()
+                renderHostState()
+            } else {
+                clientState?.let(::renderClientState)
+            }
+        } else if (role == Role.HOST) {
+            showHostLobby()
+        } else {
+            showClientLobby()
+        }
+    }
+
+    private fun showHostLobby() {
+        showLobby(
+            title = "מארחים משחק מלחמה",
+            message = "מחפש שחקנים להצטרפות. ניתן להתחיל אחרי ששחקן נוסף יתחבר.",
+            actionText = "התחל משחק",
+            actionEnabled = remotePlayerIds.isNotEmpty(),
+            action = ::startHostGame
+        )
+        refreshHostLobby()
+    }
+
+    private fun showClientLobby() {
+        showLobby(
+            title = "הצטרפות למשחק מלחמה",
+            message = "מחפש משחקים בקרבת מקום...",
+            actionText = "סרוק שוב",
+            action = {
+                discoveredEndpoints.clear()
+                nearbySession?.startDiscovery()
+                showDiscoveredEndpoints()
+            }
+        )
+        showDiscoveredEndpoints()
     }
 
     private fun handlePayload(endpointId: String, bytes: ByteArray) {

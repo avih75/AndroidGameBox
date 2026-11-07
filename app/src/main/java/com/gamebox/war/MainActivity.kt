@@ -1,5 +1,7 @@
 package com.gamebox.war
 
+import android.app.AlertDialog
+import android.content.res.Configuration
 import android.hardware.display.DisplayManager
 import android.os.Bundle
 import android.view.Display
@@ -9,6 +11,7 @@ import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.ImageView
+import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
@@ -138,6 +141,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
         findViewById<Button>(R.id.btnOpenSettings).setOnClickListener { showSettings() }
+        findViewById<TextView>(R.id.tvAppVersion).text =
+            getString(R.string.app_version_label, BuildConfig.VERSION_NAME)
     }
 
     private fun showGameSetup() {
@@ -197,7 +202,7 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btnSettingsBack).setOnClickListener { showHome() }
     }
 
-    private fun startWarGame() {
+    private fun startWarGame(resetGame: Boolean = true) {
         currentScreen = Screen.GAME
         setContentView(R.layout.activity_main)
 
@@ -215,6 +220,8 @@ class MainActivity : AppCompatActivity() {
         btnResetSeries = findViewById(R.id.btnResetSeries)
         btnSendPublicMessage = findViewById(R.id.btnSendPublicMessage)
         publicMessageInput = findViewById(R.id.inputPublicMessage)
+        findViewById<TextView>(R.id.tvAppVersion).text =
+            getString(R.string.app_version_label, BuildConfig.VERSION_NAME)
         publicMessageInput.setAdapter(android.widget.ArrayAdapter.createFromResource(
             this,
             R.array.public_game_messages,
@@ -226,15 +233,20 @@ class MainActivity : AppCompatActivity() {
         publicMessageInput.doAfterTextChanged { updatePublicMessageControls() }
 
         gameAudio.startGame(backgroundMusicEnabled(), soundEffectsEnabled())
-        game.newGame()
-        matchScoreRecorded = false
-        publicMessage = null
-        publicMessageInput.text.clear()
+        if (resetGame) {
+            game.newGame()
+            matchScoreRecorded = false
+            publicMessage = null
+            publicMessageInput.text.clear()
+        } else {
+            publicMessageInput.setText(publicMessage.orEmpty())
+        }
         btnDraw.setOnClickListener {
             gameAudio.playCardDraw()
             if (game.draw()) {
                 gameAudio.playCardsCollected()
                 updateUI()
+                if (game.lastWarCards.isNotEmpty()) showWarResolution()
             }
         }
         btnNewGame.setOnClickListener {
@@ -254,6 +266,16 @@ class MainActivity : AppCompatActivity() {
 
         updateUI()
         checkExternalDisplay()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        when (currentScreen) {
+            Screen.HOME -> showHome()
+            Screen.GAME_SETUP -> showGameSetup()
+            Screen.SETTINGS -> showSettings()
+            Screen.GAME -> startWarGame(resetGame = false)
+        }
     }
 
     private fun checkExternalDisplay() {
@@ -421,6 +443,42 @@ class MainActivity : AppCompatActivity() {
             view.showCard(card.rank, card.suit, card.isRed)
         }
     }
+
+    private fun showWarResolution() {
+        val content = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(20), dp(12), dp(20), dp(8))
+        }
+        game.lastWarCards.forEach { (player, cards) ->
+            content.addView(TextView(this).apply {
+                text = if (player == "player") "הקלפים שלך" else "קלפי המחשב"
+                textSize = 16f
+                setTextColor(ContextCompat.getColor(this@MainActivity, R.color.text))
+                setPadding(0, dp(8), 0, dp(4))
+            })
+            val row = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+            cards.forEachIndexed { index, card ->
+                val cardView = PlayingCardView(this)
+                if (index == 0 || (index - 1) % 3 == 2) {
+                    cardView.showCard(card.rank, card.suit, card.isRed)
+                } else {
+                    cardView.showCardBack()
+                }
+                row.addView(cardView, LinearLayout.LayoutParams(dp(54), dp(76)).apply {
+                    marginEnd = dp(6)
+                })
+            }
+            content.addView(HorizontalScrollView(this).apply { addView(row) })
+        }
+        AlertDialog.Builder(this)
+            .setTitle("מלחמה! הקלף השלישי מכריע")
+            .setView(content)
+            .setPositiveButton("המשך", null)
+            .show()
+    }
+
+    private fun dp(value: Int): Int =
+        (value * resources.displayMetrics.density).toInt()
 
     override fun onResume() {
         super.onResume()

@@ -19,6 +19,8 @@ class GameEngine {
         private set
     var lastCpuCard: Card? = null
         private set
+    var lastWarCards: Map<String, List<Card>> = emptyMap()
+        private set
     var lastMessage: String = "לחץ על שלוף קלף"
         private set
     var lastMessageType: MessageType = MessageType.NORMAL
@@ -33,6 +35,7 @@ class GameEngine {
         isGameOver = false
         lastPlayerCard = null
         lastCpuCard = null
+        lastWarCards = emptyMap()
         lastMessage = "לחץ על שלוף קלף"
         lastMessageType = MessageType.NORMAL
     }
@@ -44,6 +47,7 @@ class GameEngine {
         val cCard = cpuDeck.removeAt(0)
         lastPlayerCard = pCard
         lastCpuCard = cCard
+        lastWarCards = emptyMap()
 
         when {
             pCard.value > cCard.value -> {
@@ -59,30 +63,65 @@ class GameEngine {
                 lastMessageType = MessageType.LOSE
             }
             else -> {
-                // War – simple version
-                if (playerDeck.isNotEmpty() && cpuDeck.isNotEmpty()) {
-                    val pExtra = playerDeck.removeAt(0)
-                    val cExtra = cpuDeck.removeAt(0)
-                    if (pExtra.value >= cExtra.value) {
-                        playerDeck.addAll(listOf(pCard, cCard, pExtra, cExtra))
-                        lastMessage = "מלחמה! אתה ניצחת"
-                        lastMessageType = MessageType.WIN
-                    } else {
-                        cpuDeck.addAll(listOf(cCard, pCard, cExtra, pExtra))
-                        lastMessage = "מלחמה! המחשב ניצח"
-                        lastMessageType = MessageType.LOSE
-                    }
-                } else {
-                    playerDeck.add(pCard)
-                    playerDeck.add(cCard)
-                    lastMessage = "מלחמה (סיום) – אתה לוקח"
-                    lastMessageType = MessageType.WIN
-                }
+                resolveWar(pCard, cCard)
             }
         }
 
         checkGameOver()
         return true
+    }
+
+    private fun resolveWar(firstPlayerCard: Card, firstCpuCard: Card) {
+        val pot = mutableListOf(firstPlayerCard, firstCpuCard)
+        val playerWarCards = mutableListOf(firstPlayerCard)
+        val cpuWarCards = mutableListOf(firstCpuCard)
+        var contenders = setOf(PLAYER, CPU)
+        var playerComparison = firstPlayerCard
+        var cpuComparison = firstCpuCard
+        var winner: String? = null
+
+        while (winner == null) {
+            val nextContenders = linkedSetOf<String>()
+            for (contender in contenders) {
+                val deck = if (contender == PLAYER) playerDeck else cpuDeck
+                val warCards = if (contender == PLAYER) playerWarCards else cpuWarCards
+                repeat(WAR_FACE_DOWN_CARDS) {
+                    if (deck.isNotEmpty()) {
+                        val card = deck.removeAt(0)
+                        pot += card
+                        warCards += card
+                    }
+                }
+                if (deck.isNotEmpty()) {
+                    val comparison = deck.removeAt(0)
+                    pot += comparison
+                    warCards += comparison
+                    if (contender == PLAYER) playerComparison = comparison
+                    else cpuComparison = comparison
+                    nextContenders += contender
+                }
+            }
+
+            winner = when {
+                nextContenders.isEmpty() -> PLAYER
+                nextContenders.size == 1 -> nextContenders.first()
+                playerComparison.value > cpuComparison.value -> PLAYER
+                cpuComparison.value > playerComparison.value -> CPU
+                else -> null
+            }
+            contenders = nextContenders
+        }
+
+        if (winner == PLAYER) {
+            playerDeck.addAll(pot)
+            lastMessage = "מלחמה! הקלף השלישי הכריע — ניצחת ואספת ${pot.size} קלפים"
+            lastMessageType = MessageType.WIN
+        } else {
+            cpuDeck.addAll(pot)
+            lastMessage = "מלחמה! הקלף השלישי הכריע — המחשב אסף ${pot.size} קלפים"
+            lastMessageType = MessageType.LOSE
+        }
+        lastWarCards = mapOf(PLAYER to playerWarCards, CPU to cpuWarCards)
     }
 
     private fun checkGameOver() {
@@ -116,5 +155,11 @@ class GameEngine {
         }
         deck.shuffle()
         return deck
+    }
+
+    companion object {
+        private const val PLAYER = "player"
+        private const val CPU = "cpu"
+        private const val WAR_FACE_DOWN_CARDS = 2
     }
 }

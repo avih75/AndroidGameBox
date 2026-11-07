@@ -1,0 +1,26 @@
+[
+    {
+        "merged": "com.gamebox.war.app-mergeDebugResources-33:/layout-land/fragment_taki_phone.xml",
+        "source": "com.gamebox.war.app-main-36:/layout-land/fragment_taki_phone.xml"
+    },
+    {
+        "merged": "com.gamebox.war.app-mergeDebugResources-33:/layout-land/presentation_table.xml",
+        "source": "com.gamebox.war.app-main-36:/layout-land/presentation_table.xml"
+    },
+    {
+        "merged": "com.gamebox.war.app-mergeDebugResources-33:/layout-land/screen_home.xml",
+        "source": "com.gamebox.war.app-main-36:/layout-land/screen_home.xml"
+    },
+    {
+        "merged": "com.gamebox.war.app-mergeDebugResources-33:/layout-land/screen_game_setup.xml",
+        "source": "com.gamebox.war.app-main-36:/layout-land/screen_game_setup.xml"
+    },
+    {
+        "merged": "com.gamebox.war.app-mergeDebugResources-33:/layout-land/activity_main.xml",
+        "source": "com.gamebox.war.app-main-36:/layout-land/activity_main.xml"
+    },
+    {
+        "merged": "com.gamebox.war.app-mergeDebugResources-33:/layout-land/presentation_taki_table.xml",
+        "source": "com.gamebox.war.app-main-36:/layout-land/presentation_taki_table.xml"
+    }
+]

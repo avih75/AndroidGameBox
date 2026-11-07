@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.Display
 import android.view.Gravity
+import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
@@ -29,6 +30,12 @@ class WarMultiplayerPresentation(context: Context, display: Display) :
             text = "מלחמה"
             textSize = 34f
             setTextColor(0xFFF1F5F9.toInt())
+            gravity = Gravity.CENTER
+        })
+        root.addView(TextView(context).apply {
+            text = context.getString(R.string.app_version_label, BuildConfig.VERSION_NAME)
+            textSize = 11f
+            setTextColor(0xFF94A3B8.toInt())
             gravity = Gravity.CENTER
         })
         status = TextView(context).apply {
@@ -56,6 +63,7 @@ class WarMultiplayerPresentation(context: Context, display: Display) :
             1f
         ))
         setContentView(root)
+        window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
     }
 
     fun update(
