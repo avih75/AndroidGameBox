@@ -25,7 +25,7 @@ hangman
 sudoku
 word search
 guess the letter - Done
-write the letter
+write the letter - Done
 
 ## Strategy games
 nim

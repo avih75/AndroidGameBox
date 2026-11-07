@@ -1,9 +1,9 @@
 # Game Box
 
 Game Box is an Android app for a growing collection of games. Playable games
-include **War**, **Taki**, and **Guess the first letter**. The letter game
-supports English and Hebrew, solo or teacher-guided play, and can show its
-shared picture and prompt on an external display.
+include **War**, **Taki**, **Guess the first letter**, and **Write the letter**.
+The letter games support English and Hebrew, solo or teacher-guided play, and
+can show their shared picture and prompt on an external display.
 
 The home screen also lists proposed follow-on games by category. Games marked
 as planned are catalog suggestions only; they cannot be launched yet.

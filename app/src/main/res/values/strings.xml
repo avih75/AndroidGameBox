@@ -72,6 +72,8 @@
     <string name="game_word_search_description">מצא מילים שמוסתרות בתוך רשת אותיות.</string>
     <string name="game_guess_the_letter">נחש את האות הראשונה</string>
     <string name="game_guess_the_letter_description">למדו אותיות בעברית ובאנגלית בעזרת תמונות, רמזים וניקוד.</string>
+    <string name="game_write_the_letter">כתיבת האות</string>
+    <string name="game_write_the_letter_description">כתבו את האות הראשונה של שם התמונה ותרגלו אותה בעזרת רמזים קוליים והדגמה.</string>
     <string name="game_nim">נים</string>
     <string name="game_nim_description">קח פריטים מערימות ונסה להשאיר ליריב את המהלך האחרון.</string>
     <string name="game_reversi">רברסי</string>

@@ -47,7 +47,8 @@ object GameCatalog {
                 GameCatalogItem(R.string.game_2048, R.string.game_2048_description, R.string.effort_easy, R.drawable.art_words_numbers),
                 GameCatalogItem(R.string.game_sudoku, R.string.game_sudoku_description, R.string.effort_medium, R.drawable.art_words_numbers),
                 GameCatalogItem(R.string.game_word_search, R.string.game_word_search_description, R.string.effort_medium, R.drawable.art_words_numbers),
-                GameCatalogItem(R.string.game_guess_the_letter, R.string.game_guess_the_letter_description, R.string.effort_easy, R.drawable.art_words_numbers, true)
+                GameCatalogItem(R.string.game_guess_the_letter, R.string.game_guess_the_letter_description, R.string.effort_easy, R.drawable.art_words_numbers, true),
+                GameCatalogItem(R.string.game_write_the_letter, R.string.game_write_the_letter_description, R.string.effort_easy, R.drawable.art_words_numbers, true)
             )
         ),
         GameCatalogCategory(

@@ -44,6 +44,10 @@
             android:name="com.gamebox.letter.LetterGameActivity"
             android:exported="false"
             android:configChanges="orientation|screenSize|keyboardHidden" />
+        <activity
+            android:name="com.gamebox.letter.WriteLetterActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
     </application>
 
 </manifest>

@@ -139,6 +139,12 @@ class MainActivity : AppCompatActivity() {
                                     com.gamebox.letter.LetterGameActivity::class.java
                                 ))
                             }
+                            R.string.game_write_the_letter -> {
+                                startActivity(android.content.Intent(
+                                    this,
+                                    com.gamebox.letter.WriteLetterActivity::class.java
+                                ))
+                            }
                             else -> showGameSetup()
                         }
                     }
