@@ -18,6 +18,7 @@
     <dimen name="catalog_section_bottom">10dp</dimen>
     <dimen name="catalog_section_top">18dp</dimen>
     <string name="app_name">קופסת משחקים</string>
+    <string name="app_version_label">גרסה %1$s</string>
     <string name="back_to_games">חזרה למשחקים</string>
     <string name="background_music">מוזיקת רקע רגועה</string>
     <string name="category_board_games">משחקי לוח</string>
@@ -45,6 +46,8 @@
     <string name="game_go_fish_description">אסוף רביעיות קלפים באמצעות בקשות מהיריב.</string>
     <string name="game_guess_number">נחש את המספר</string>
     <string name="game_guess_number_description">השתמש ברמזים כדי למצוא מספר סודי.</string>
+    <string name="game_guess_the_letter">נחש את האות הראשונה</string>
+    <string name="game_guess_the_letter_description">למדו אותיות בעברית ובאנגלית בעזרת תמונות, רמזים וניקוד.</string>
     <string name="game_hangman">איש תלוי</string>
     <string name="game_hangman_description">נחש את המילה לפני שנגמרים הניסיונות.</string>
     <string name="game_higher_lower">גבוה או נמוך</string>

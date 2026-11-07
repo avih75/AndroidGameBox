@@ -23,6 +23,9 @@ public final class PresentationTakiTableBinding implements ViewBinding {
   public final LinearLayout playersRow;
 
   @NonNull
+  public final TextView tvAppVersion;
+
+  @NonNull
   public final TextView tvCurrentColor;
 
   @NonNull
@@ -38,11 +41,12 @@ public final class PresentationTakiTableBinding implements ViewBinding {
   public final TextView tvTopCard;
 
   private PresentationTakiTableBinding(@NonNull LinearLayout rootView,
-      @NonNull LinearLayout playersRow, @NonNull TextView tvCurrentColor,
-      @NonNull TextView tvDirection, @NonNull TextView tvMessage, @NonNull TextView tvPendingDraw,
-      @NonNull TextView tvTopCard) {
+      @NonNull LinearLayout playersRow, @NonNull TextView tvAppVersion,
+      @NonNull TextView tvCurrentColor, @NonNull TextView tvDirection, @NonNull TextView tvMessage,
+      @NonNull TextView tvPendingDraw, @NonNull TextView tvTopCard) {
     this.rootView = rootView;
     this.playersRow = playersRow;
+    this.tvAppVersion = tvAppVersion;
     this.tvCurrentColor = tvCurrentColor;
     this.tvDirection = tvDirection;
     this.tvMessage = tvMessage;
@@ -83,6 +87,12 @@ public final class PresentationTakiTableBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.tvAppVersion;
+      TextView tvAppVersion = ViewBindings.findChildViewById(rootView, id);
+      if (tvAppVersion == null) {
+        break missingId;
+      }
+
       id = R.id.tvCurrentColor;
       TextView tvCurrentColor = ViewBindings.findChildViewById(rootView, id);
       if (tvCurrentColor == null) {
@@ -113,8 +123,8 @@ public final class PresentationTakiTableBinding implements ViewBinding {
         break missingId;
       }
 
-      return new PresentationTakiTableBinding((LinearLayout) rootView, playersRow, tvCurrentColor,
-          tvDirection, tvMessage, tvPendingDraw, tvTopCard);
+      return new PresentationTakiTableBinding((LinearLayout) rootView, playersRow, tvAppVersion,
+          tvCurrentColor, tvDirection, tvMessage, tvPendingDraw, tvTopCard);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

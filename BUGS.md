@@ -3,10 +3,13 @@
 2. [DONE] must support width, when the phone is not stending
 3. [DONE] external screen musr be width screen and not standing
 4. [DONE] when have external screen, the playe must use it. the common data and view should be only in the external
+
 # WAR:
 1. [DONE] when the two player throw the same card value (by number), there supose to be a special activity to happend.
 - each player throw three cards on top of the first one and the therd one is the one that comparing the result to see who wins the whole pack
-2. [ReOpen] all the cards around missing part, meaninig it looks like it have pedding (4,4,4,4) - still part of the card is hidden
+2. [DONE] all the cards around missing part, meaninig it looks like it have pedding (4,4,4,4) - still part of the card is hidden
+
+# Guess the letter:
 
 # Taki:
 1. [DONE] no +3 only +2 should be in the cards

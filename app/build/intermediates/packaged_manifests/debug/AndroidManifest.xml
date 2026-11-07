@@ -50,8 +50,7 @@
         <activity
             android:name="com.gamebox.war.MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:exported="true"
-            android:screenOrientation="portrait" >
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -61,13 +60,15 @@
         <activity
             android:name="com.gamebox.taki.ui.phone.TakiHostActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:exported="false"
-            android:screenOrientation="portrait" />
+            android:exported="false" />
         <activity
             android:name="com.gamebox.war.WarMultiplayerActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:exported="false"
-            android:screenOrientation="portrait" />
+            android:exported="false" />
+        <activity
+            android:name="com.gamebox.letter.LetterGameActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="false" />
 
         <service
             android:name="com.google.android.gms.nearby.exposurenotification.WakeUpService"

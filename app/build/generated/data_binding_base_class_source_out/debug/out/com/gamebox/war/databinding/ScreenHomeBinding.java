@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewbinding.ViewBinding;
@@ -25,11 +26,15 @@ public final class ScreenHomeBinding implements ViewBinding {
   @NonNull
   public final LinearLayout gameCatalogContainer;
 
+  @NonNull
+  public final TextView tvAppVersion;
+
   private ScreenHomeBinding(@NonNull LinearLayout rootView, @NonNull Button btnOpenSettings,
-      @NonNull LinearLayout gameCatalogContainer) {
+      @NonNull LinearLayout gameCatalogContainer, @NonNull TextView tvAppVersion) {
     this.rootView = rootView;
     this.btnOpenSettings = btnOpenSettings;
     this.gameCatalogContainer = gameCatalogContainer;
+    this.tvAppVersion = tvAppVersion;
   }
 
   @Override
@@ -71,7 +76,14 @@ public final class ScreenHomeBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ScreenHomeBinding((LinearLayout) rootView, btnOpenSettings, gameCatalogContainer);
+      id = R.id.tvAppVersion;
+      TextView tvAppVersion = ViewBindings.findChildViewById(rootView, id);
+      if (tvAppVersion == null) {
+        break missingId;
+      }
+
+      return new ScreenHomeBinding((LinearLayout) rootView, btnOpenSettings, gameCatalogContainer,
+          tvAppVersion);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

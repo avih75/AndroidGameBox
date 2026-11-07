@@ -53,6 +53,9 @@ public final class ActivityMainBinding implements ViewBinding {
   public final LinearLayout playerCounts;
 
   @NonNull
+  public final TextView tvAppVersion;
+
+  @NonNull
   public final TextView tvCpuCount;
 
   @NonNull
@@ -78,7 +81,8 @@ public final class ActivityMainBinding implements ViewBinding {
       @NonNull Button btnSendPublicMessage, @NonNull LinearLayout cardArea,
       @NonNull PlayingCardView cardCpu, @NonNull PlayingCardView cardPlayer,
       @NonNull AutoCompleteTextView inputPublicMessage, @NonNull LinearLayout playerCounts,
-      @NonNull TextView tvCpuCount, @NonNull TextView tvDisplayStatus, @NonNull TextView tvMessage,
+      @NonNull TextView tvAppVersion, @NonNull TextView tvCpuCount,
+      @NonNull TextView tvDisplayStatus, @NonNull TextView tvMessage,
       @NonNull TextView tvPlayerCount, @NonNull TextView tvPrivatePlayerCount,
       @NonNull TextView tvPublicMessageStatus, @NonNull TextView tvSeriesScore) {
     this.rootView = rootView;
@@ -92,6 +96,7 @@ public final class ActivityMainBinding implements ViewBinding {
     this.cardPlayer = cardPlayer;
     this.inputPublicMessage = inputPublicMessage;
     this.playerCounts = playerCounts;
+    this.tvAppVersion = tvAppVersion;
     this.tvCpuCount = tvCpuCount;
     this.tvDisplayStatus = tvDisplayStatus;
     this.tvMessage = tvMessage;
@@ -188,6 +193,12 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.tvAppVersion;
+      TextView tvAppVersion = ViewBindings.findChildViewById(rootView, id);
+      if (tvAppVersion == null) {
+        break missingId;
+      }
+
       id = R.id.tvCpuCount;
       TextView tvCpuCount = ViewBindings.findChildViewById(rootView, id);
       if (tvCpuCount == null) {
@@ -232,8 +243,8 @@ public final class ActivityMainBinding implements ViewBinding {
 
       return new ActivityMainBinding((LinearLayout) rootView, btnDraw, btnGameMenu, btnNewGame,
           btnResetSeries, btnSendPublicMessage, cardArea, cardCpu, cardPlayer, inputPublicMessage,
-          playerCounts, tvCpuCount, tvDisplayStatus, tvMessage, tvPlayerCount, tvPrivatePlayerCount,
-          tvPublicMessageStatus, tvSeriesScore);
+          playerCounts, tvAppVersion, tvCpuCount, tvDisplayStatus, tvMessage, tvPlayerCount,
+          tvPrivatePlayerCount, tvPublicMessageStatus, tvSeriesScore);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

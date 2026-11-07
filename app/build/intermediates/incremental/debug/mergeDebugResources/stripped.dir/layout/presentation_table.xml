@@ -134,4 +134,12 @@
         android:ellipsize="end"
         android:visibility="gone" />
 
+    <TextView
+        android:id="@+id/tvAppVersion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:textColor="#94A3B8"
+        android:textSize="11sp" />
+
 </LinearLayout>

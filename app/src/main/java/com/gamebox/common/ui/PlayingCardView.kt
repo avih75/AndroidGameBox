@@ -46,7 +46,8 @@ class PlayingCardView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        val inset = dp(2f)
+        val borderWidth = dp(1.2f)
+        val inset = borderWidth / 2f
         cardBounds.set(inset, inset, width - inset, height - inset)
         val corner = dp(10f)
 
@@ -55,7 +56,7 @@ class PlayingCardView @JvmOverloads constructor(
         canvas.drawRoundRect(cardBounds, corner, corner, paint)
         paint.color = CARD_BORDER
         paint.style = Paint.Style.STROKE
-        paint.strokeWidth = dp(1.2f)
+        paint.strokeWidth = borderWidth
         canvas.drawRoundRect(cardBounds, corner, corner, paint)
         paint.style = Paint.Style.FILL
 
@@ -73,11 +74,14 @@ class PlayingCardView @JvmOverloads constructor(
 
         val ink = if (isRed) RED_INK else BLACK_INK
         val cornerText = "$faceRank\n$faceSuit"
-        drawText(canvas, cornerText, ink, height * 0.17f, width * 0.16f, height * 0.12f)
+        val cornerTextSize = minOf(cardBounds.width() * 0.2f, cardBounds.height() * 0.105f)
+        val cornerX = cardBounds.left + cardBounds.width() * 0.18f
+        val cornerY = cardBounds.top + cardBounds.height() * 0.17f
+        drawText(canvas, cornerText, ink, cornerTextSize, cornerX, cornerY)
 
         canvas.save()
         canvas.rotate(180f, width / 2f, height / 2f)
-        drawText(canvas, cornerText, ink, height * 0.17f, width * 0.16f, height * 0.12f)
+        drawText(canvas, cornerText, ink, cornerTextSize, cornerX, cornerY)
         canvas.restore()
 
         val rankValue = faceRank.toIntOrNull()

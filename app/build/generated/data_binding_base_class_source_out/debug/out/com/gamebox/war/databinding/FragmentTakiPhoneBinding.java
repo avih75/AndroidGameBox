@@ -36,6 +36,12 @@ public final class FragmentTakiPhoneBinding implements ViewBinding {
   public final LinearLayout handContainer;
 
   @NonNull
+  public final TextView tvActionHistory;
+
+  @NonNull
+  public final TextView tvAppVersion;
+
+  @NonNull
   public final TextView tvCurrentColor;
 
   @NonNull
@@ -58,16 +64,18 @@ public final class FragmentTakiPhoneBinding implements ViewBinding {
 
   private FragmentTakiPhoneBinding(@NonNull LinearLayout rootView, @NonNull Button btnCloseTaki,
       @NonNull Button btnDraw, @NonNull Button btnNewTakiGame, @NonNull Button btnResetTakiWins,
-      @NonNull LinearLayout handContainer, @NonNull TextView tvCurrentColor,
-      @NonNull TextView tvMessage, @NonNull TextView tvPendingDraw,
-      @NonNull TextView tvPlayersSummary, @NonNull TextView tvStatus, @NonNull TextView tvTopCard,
-      @NonNull TextView tvWinCounter) {
+      @NonNull LinearLayout handContainer, @NonNull TextView tvActionHistory,
+      @NonNull TextView tvAppVersion, @NonNull TextView tvCurrentColor, @NonNull TextView tvMessage,
+      @NonNull TextView tvPendingDraw, @NonNull TextView tvPlayersSummary,
+      @NonNull TextView tvStatus, @NonNull TextView tvTopCard, @NonNull TextView tvWinCounter) {
     this.rootView = rootView;
     this.btnCloseTaki = btnCloseTaki;
     this.btnDraw = btnDraw;
     this.btnNewTakiGame = btnNewTakiGame;
     this.btnResetTakiWins = btnResetTakiWins;
     this.handContainer = handContainer;
+    this.tvActionHistory = tvActionHistory;
+    this.tvAppVersion = tvAppVersion;
     this.tvCurrentColor = tvCurrentColor;
     this.tvMessage = tvMessage;
     this.tvPendingDraw = tvPendingDraw;
@@ -134,6 +142,18 @@ public final class FragmentTakiPhoneBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.tvActionHistory;
+      TextView tvActionHistory = ViewBindings.findChildViewById(rootView, id);
+      if (tvActionHistory == null) {
+        break missingId;
+      }
+
+      id = R.id.tvAppVersion;
+      TextView tvAppVersion = ViewBindings.findChildViewById(rootView, id);
+      if (tvAppVersion == null) {
+        break missingId;
+      }
+
       id = R.id.tvCurrentColor;
       TextView tvCurrentColor = ViewBindings.findChildViewById(rootView, id);
       if (tvCurrentColor == null) {
@@ -177,8 +197,9 @@ public final class FragmentTakiPhoneBinding implements ViewBinding {
       }
 
       return new FragmentTakiPhoneBinding((LinearLayout) rootView, btnCloseTaki, btnDraw,
-          btnNewTakiGame, btnResetTakiWins, handContainer, tvCurrentColor, tvMessage, tvPendingDraw,
-          tvPlayersSummary, tvStatus, tvTopCard, tvWinCounter);
+          btnNewTakiGame, btnResetTakiWins, handContainer, tvActionHistory, tvAppVersion,
+          tvCurrentColor, tvMessage, tvPendingDraw, tvPlayersSummary, tvStatus, tvTopCard,
+          tvWinCounter);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

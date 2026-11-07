@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:2:1-48:12
-INJECTED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:2:1-48:12
-INJECTED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:2:1-48:12
-INJECTED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:2:1-48:12
+ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:2:1-49:12
+INJECTED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:2:1-49:12
+INJECTED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:2:1-49:12
+INJECTED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:2:1-49:12
 MERGED from [androidx.databinding:viewbinding:8.2.2] C:\Users\user\.gradle\caches\8.11.1\transforms\13ae8fada6660d8f42d8dd65d553c1db\transformed\viewbinding-8.2.2\AndroidManifest.xml:2:1-7:12
 MERGED from [com.google.android.material:material:1.11.0] C:\Users\user\.gradle\caches\8.11.1\transforms\b78a724cb75179cddcd3a56de4e47185\transformed\material-1.11.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.constraintlayout:constraintlayout:2.1.4] C:\Users\user\.gradle\caches\8.11.1\transforms\4a4b4772d9ead1a4f5f8b97093abf203\transformed\constraintlayout-2.1.4\AndroidManifest.xml:2:1-11:12
@@ -111,8 +111,8 @@ ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:
 	android:name
 		ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:16:9-62
 application
-ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:19:5-46:19
-INJECTED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:19:5-46:19
+ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:19:5-47:19
+INJECTED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:19:5-47:19
 MERGED from [com.google.android.material:material:1.11.0] C:\Users\user\.gradle\caches\8.11.1\transforms\b78a724cb75179cddcd3a56de4e47185\transformed\material-1.11.0\AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.material:material:1.11.0] C:\Users\user\.gradle\caches\8.11.1\transforms\b78a724cb75179cddcd3a56de4e47185\transformed\material-1.11.0\AndroidManifest.xml:22:5-20
 MERGED from [androidx.constraintlayout:constraintlayout:2.1.4] C:\Users\user\.gradle\caches\8.11.1\transforms\4a4b4772d9ead1a4f5f8b97093abf203\transformed\constraintlayout-2.1.4\AndroidManifest.xml:9:5-20
@@ -152,45 +152,47 @@ MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\user\.gradle\cache
 	android:theme
 		ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:24:9-48
 activity#com.gamebox.war.MainActivity
-ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:25:9-34:20
-	android:screenOrientation
-		ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:28:13-49
+ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:25:9-33:20
 	android:exported
 		ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:27:13-36
 	android:configChanges
-		ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:29:13-74
+		ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:28:13-74
 	android:name
 		ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:26:13-41
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:30:13-33:29
+ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:29:13-32:29
 action#android.intent.action.MAIN
-ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:31:17-69
+ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:30:17-69
 	android:name
-		ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:31:25-66
+		ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:30:25-66
 category#android.intent.category.LAUNCHER
-ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:32:17-77
+ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:31:17-77
 	android:name
-		ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:32:27-74
+		ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:31:27-74
 activity#com.gamebox.taki.ui.phone.TakiHostActivity
-ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:35:9-40:11
-	android:screenOrientation
-		ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:38:13-49
+ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:34:9-38:11
 	android:exported
-		ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:37:13-37
+		ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:36:13-37
 	android:configChanges
-		ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:39:13-74
+		ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:37:13-74
 	android:name
-		ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:36:13-70
+		ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:35:13-70
 activity#com.gamebox.war.WarMultiplayerActivity
-ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:41:9-45:77
-	android:screenOrientation
-		ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:44:13-49
+ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:39:9-42:77
 	android:exported
-		ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:43:13-37
+		ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:41:13-37
 	android:configChanges
-		ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:45:13-74
+		ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:42:13-74
 	android:name
-		ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:42:13-66
+		ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:40:13-66
+activity#com.gamebox.letter.LetterGameActivity
+ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:43:9-46:77
+	android:exported
+		ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:45:13-37
+	android:configChanges
+		ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:46:13-74
+	android:name
+		ADDED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml:44:13-65
 uses-sdk
 INJECTED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\Users\user\source\repos\Game-Box\app\src\main\AndroidManifest.xml

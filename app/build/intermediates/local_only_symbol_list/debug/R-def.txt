@@ -42,6 +42,8 @@ id inputPublicMessage
 id ivGameArtwork
 id playerCounts
 id playersRow
+id tvActionHistory
+id tvAppVersion
 id tvCpuCount
 id tvCurrentColor
 id tvDirection
@@ -73,6 +75,7 @@ mipmap ic_launcher
 mipmap ic_launcher_adaptive_back
 mipmap ic_launcher_adaptive_fore
 string app_name
+string app_version_label
 string back_to_games
 string background_music
 string category_board_games
@@ -100,6 +103,8 @@ string game_go_fish
 string game_go_fish_description
 string game_guess_number
 string game_guess_number_description
+string game_guess_the_letter
+string game_guess_the_letter_description
 string game_hangman
 string game_hangman_description
 string game_higher_lower

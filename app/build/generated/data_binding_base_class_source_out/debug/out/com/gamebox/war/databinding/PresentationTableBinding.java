@@ -27,6 +27,9 @@ public final class PresentationTableBinding implements ViewBinding {
   public final PlayingCardView cardPlayer;
 
   @NonNull
+  public final TextView tvAppVersion;
+
+  @NonNull
   public final TextView tvCpuCount;
 
   @NonNull
@@ -42,12 +45,13 @@ public final class PresentationTableBinding implements ViewBinding {
   public final TextView tvSeriesScore;
 
   private PresentationTableBinding(@NonNull LinearLayout rootView, @NonNull PlayingCardView cardCpu,
-      @NonNull PlayingCardView cardPlayer, @NonNull TextView tvCpuCount,
-      @NonNull TextView tvMessage, @NonNull TextView tvPlayerCount,
+      @NonNull PlayingCardView cardPlayer, @NonNull TextView tvAppVersion,
+      @NonNull TextView tvCpuCount, @NonNull TextView tvMessage, @NonNull TextView tvPlayerCount,
       @NonNull TextView tvPublicMessage, @NonNull TextView tvSeriesScore) {
     this.rootView = rootView;
     this.cardCpu = cardCpu;
     this.cardPlayer = cardPlayer;
+    this.tvAppVersion = tvAppVersion;
     this.tvCpuCount = tvCpuCount;
     this.tvMessage = tvMessage;
     this.tvPlayerCount = tvPlayerCount;
@@ -94,6 +98,12 @@ public final class PresentationTableBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.tvAppVersion;
+      TextView tvAppVersion = ViewBindings.findChildViewById(rootView, id);
+      if (tvAppVersion == null) {
+        break missingId;
+      }
+
       id = R.id.tvCpuCount;
       TextView tvCpuCount = ViewBindings.findChildViewById(rootView, id);
       if (tvCpuCount == null) {
@@ -124,8 +134,8 @@ public final class PresentationTableBinding implements ViewBinding {
         break missingId;
       }
 
-      return new PresentationTableBinding((LinearLayout) rootView, cardCpu, cardPlayer, tvCpuCount,
-          tvMessage, tvPlayerCount, tvPublicMessage, tvSeriesScore);
+      return new PresentationTableBinding((LinearLayout) rootView, cardCpu, cardPlayer,
+          tvAppVersion, tvCpuCount, tvMessage, tvPlayerCount, tvPublicMessage, tvSeriesScore);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

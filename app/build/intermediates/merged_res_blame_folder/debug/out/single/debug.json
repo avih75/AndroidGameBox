@@ -1,82 +1,94 @@
 [
     {
-        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.11.1\\com.gamebox.war.app-merged_res-34:\\mipmap-hdpi_ic_launcher_adaptive_back.png.flat",
-        "source": "C:\\Users\\user\\.gradle\\daemon\\8.11.1\\com.gamebox.war.app-main-36:\\mipmap-hdpi\\ic_launcher_adaptive_back.png"
+        "merged": "com.gamebox.war.app-merged_res-34:/layout-land_presentation_table.xml.flat",
+        "source": "com.gamebox.war.app-main-36:/layout-land/presentation_table.xml"
     },
     {
-        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.11.1\\com.gamebox.war.app-merged_res-34:\\drawable_art_cards.xml.flat",
-        "source": "C:\\Users\\user\\.gradle\\daemon\\8.11.1\\com.gamebox.war.app-main-36:\\drawable\\art_cards.xml"
+        "merged": "com.gamebox.war.app-merged_res-34:/layout-land_presentation_taki_table.xml.flat",
+        "source": "com.gamebox.war.app-main-36:/layout-land/presentation_taki_table.xml"
     },
     {
-        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.11.1\\com.gamebox.war.app-merged_res-34:\\layout_item_game_catalog.xml.flat",
-        "source": "C:\\Users\\user\\.gradle\\daemon\\8.11.1\\com.gamebox.war.app-main-36:\\layout\\item_game_catalog.xml"
+        "merged": "com.gamebox.war.app-merged_res-34:/layout_item_game_catalog.xml.flat",
+        "source": "com.gamebox.war.app-main-36:/layout/item_game_catalog.xml"
     },
     {
-        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.11.1\\com.gamebox.war.app-merged_res-34:\\drawable_catalog_game_background.xml.flat",
-        "source": "C:\\Users\\user\\.gradle\\daemon\\8.11.1\\com.gamebox.war.app-main-36:\\drawable\\catalog_game_background.xml"
+        "merged": "com.gamebox.war.app-merged_res-34:/layout-land_activity_main.xml.flat",
+        "source": "com.gamebox.war.app-main-36:/layout-land/activity_main.xml"
     },
     {
-        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.11.1\\com.gamebox.war.app-merged_res-34:\\mipmap-hdpi_ic_launcher.png.flat",
-        "source": "C:\\Users\\user\\.gradle\\daemon\\8.11.1\\com.gamebox.war.app-main-36:\\mipmap-hdpi\\ic_launcher.png"
+        "merged": "com.gamebox.war.app-merged_res-34:/layout_screen_settings.xml.flat",
+        "source": "com.gamebox.war.app-main-36:/layout/screen_settings.xml"
+    },
+    {
+        "merged": "com.gamebox.war.app-merged_res-34:/drawable_catalog_game_background.xml.flat",
+        "source": "com.gamebox.war.app-main-36:/drawable/catalog_game_background.xml"
+    },
+    {
+        "merged": "com.gamebox.war.app-merged_res-34:/layout_screen_home.xml.flat",
+        "source": "com.gamebox.war.app-main-36:/layout/screen_home.xml"
+    },
+    {
+        "merged": "com.gamebox.war.app-merged_res-34:/drawable_art_strategy.xml.flat",
+        "source": "com.gamebox.war.app-main-36:/drawable/art_strategy.xml"
+    },
+    {
+        "merged": "com.gamebox.war.app-merged_res-34:/mipmap-hdpi_ic_launcher_adaptive_back.png.flat",
+        "source": "com.gamebox.war.app-main-36:/mipmap-hdpi/ic_launcher_adaptive_back.png"
+    },
+    {
+        "merged": "com.gamebox.war.app-merged_res-34:/layout-land_fragment_taki_phone.xml.flat",
+        "source": "com.gamebox.war.app-main-36:/layout-land/fragment_taki_phone.xml"
+    },
+    {
+        "merged": "com.gamebox.war.app-merged_res-34:/layout_item_spinner_dropdown.xml.flat",
+        "source": "com.gamebox.war.app-main-36:/layout/item_spinner_dropdown.xml"
+    },
+    {
+        "merged": "com.gamebox.war.app-merged_res-34:/mipmap-hdpi_ic_launcher_adaptive_fore.png.flat",
+        "source": "com.gamebox.war.app-main-36:/mipmap-hdpi/ic_launcher_adaptive_fore.png"
     },
     {
         "merged": "com.gamebox.war.app-merged_res-34:/layout_presentation_table.xml.flat",
         "source": "com.gamebox.war.app-main-36:/layout/presentation_table.xml"
     },
     {
-        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.11.1\\com.gamebox.war.app-merged_res-34:\\layout_fragment_taki_phone.xml.flat",
-        "source": "C:\\Users\\user\\.gradle\\daemon\\8.11.1\\com.gamebox.war.app-main-36:\\layout\\fragment_taki_phone.xml"
-    },
-    {
-        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.11.1\\com.gamebox.war.app-merged_res-34:\\drawable_art_strategy.xml.flat",
-        "source": "C:\\Users\\user\\.gradle\\daemon\\8.11.1\\com.gamebox.war.app-main-36:\\drawable\\art_strategy.xml"
-    },
-    {
-        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.11.1\\com.gamebox.war.app-merged_res-34:\\layout_presentation_table.xml.flat",
-        "source": "C:\\Users\\user\\.gradle\\daemon\\8.11.1\\com.gamebox.war.app-main-36:\\layout\\presentation_table.xml"
+        "merged": "com.gamebox.war.app-merged_res-34:/layout_fragment_taki_phone.xml.flat",
+        "source": "com.gamebox.war.app-main-36:/layout/fragment_taki_phone.xml"
     },
     {
         "merged": "com.gamebox.war.app-merged_res-34:/layout_activity_main.xml.flat",
         "source": "com.gamebox.war.app-main-36:/layout/activity_main.xml"
     },
     {
-        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.11.1\\com.gamebox.war.app-merged_res-34:\\drawable_art_words_numbers.xml.flat",
-        "source": "C:\\Users\\user\\.gradle\\daemon\\8.11.1\\com.gamebox.war.app-main-36:\\drawable\\art_words_numbers.xml"
+        "merged": "com.gamebox.war.app-merged_res-34:/drawable_art_words_numbers.xml.flat",
+        "source": "com.gamebox.war.app-main-36:/drawable/art_words_numbers.xml"
     },
     {
-        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.11.1\\com.gamebox.war.app-merged_res-34:\\layout_screen_settings.xml.flat",
-        "source": "C:\\Users\\user\\.gradle\\daemon\\8.11.1\\com.gamebox.war.app-main-36:\\layout\\screen_settings.xml"
+        "merged": "com.gamebox.war.app-merged_res-34:/mipmap-hdpi_ic_launcher.png.flat",
+        "source": "com.gamebox.war.app-main-36:/mipmap-hdpi/ic_launcher.png"
     },
     {
-        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.11.1\\com.gamebox.war.app-merged_res-34:\\layout_activity_main.xml.flat",
-        "source": "C:\\Users\\user\\.gradle\\daemon\\8.11.1\\com.gamebox.war.app-main-36:\\layout\\activity_main.xml"
+        "merged": "com.gamebox.war.app-merged_res-34:/layout-land_screen_home.xml.flat",
+        "source": "com.gamebox.war.app-main-36:/layout-land/screen_home.xml"
     },
     {
-        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.11.1\\com.gamebox.war.app-merged_res-34:\\layout_screen_game_setup.xml.flat",
-        "source": "C:\\Users\\user\\.gradle\\daemon\\8.11.1\\com.gamebox.war.app-main-36:\\layout\\screen_game_setup.xml"
+        "merged": "com.gamebox.war.app-merged_res-34:/layout_presentation_taki_table.xml.flat",
+        "source": "com.gamebox.war.app-main-36:/layout/presentation_taki_table.xml"
     },
     {
-        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.11.1\\com.gamebox.war.app-merged_res-34:\\mipmap-hdpi_ic_launcher_adaptive_fore.png.flat",
-        "source": "C:\\Users\\user\\.gradle\\daemon\\8.11.1\\com.gamebox.war.app-main-36:\\mipmap-hdpi\\ic_launcher_adaptive_fore.png"
+        "merged": "com.gamebox.war.app-merged_res-34:/layout-land_screen_game_setup.xml.flat",
+        "source": "com.gamebox.war.app-main-36:/layout-land/screen_game_setup.xml"
     },
     {
         "merged": "com.gamebox.war.app-merged_res-34:/layout_screen_game_setup.xml.flat",
         "source": "com.gamebox.war.app-main-36:/layout/screen_game_setup.xml"
     },
     {
-        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.11.1\\com.gamebox.war.app-merged_res-34:\\layout_item_spinner_dropdown.xml.flat",
-        "source": "C:\\Users\\user\\.gradle\\daemon\\8.11.1\\com.gamebox.war.app-main-36:\\layout\\item_spinner_dropdown.xml"
+        "merged": "com.gamebox.war.app-merged_res-34:/drawable_art_cards.xml.flat",
+        "source": "com.gamebox.war.app-main-36:/drawable/art_cards.xml"
     },
     {
-        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.11.1\\com.gamebox.war.app-merged_res-34:\\layout_presentation_taki_table.xml.flat",
-        "source": "C:\\Users\\user\\.gradle\\daemon\\8.11.1\\com.gamebox.war.app-main-36:\\layout\\presentation_taki_table.xml"
-    },
-    {
-        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.11.1\\com.gamebox.war.app-merged_res-34:\\layout_screen_home.xml.flat",
-        "source": "C:\\Users\\user\\.gradle\\daemon\\8.11.1\\com.gamebox.war.app-main-36:\\layout\\screen_home.xml"
-    },
-    {
-        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.11.1\\com.gamebox.war.app-merged_res-34:\\drawable_art_board.xml.flat",
-        "source": "C:\\Users\\user\\.gradle\\daemon\\8.11.1\\com.gamebox.war.app-main-36:\\drawable\\art_board.xml"
+        "merged": "com.gamebox.war.app-merged_res-34:/drawable_art_board.xml.flat",
+        "source": "com.gamebox.war.app-main-36:/drawable/art_board.xml"
     }
 ]
