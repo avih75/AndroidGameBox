@@ -95,7 +95,7 @@ class TakiPhoneController(
             "${it.name} ${winCounts[it.id] ?: 0}"
         }
         tvMessage.text = public.lastActionMessage.ifEmpty { "המשחק מוכן" }
-        tvActionHistory.text = public.actionHistory.takeLast(6)
+        tvActionHistory.text = public.actionHistory.takeLast(10)
             .asReversed()
             .joinToString("\n") { "• $it" }
 
@@ -144,22 +144,26 @@ class TakiPhoneController(
     }
 
     private fun makeCardView(card: TakiCard): FrameLayout {
+        val palette = cardPalette(card.color)
+        val accent = inkColor(card.color)
         val face = FrameLayout(root.context).apply {
-            background = GradientDrawable().apply {
-                setColor(0xFFFFFEFA.toInt())
-                cornerRadius = dp(12).toFloat()
-                setStroke(dp(2), inkColor(card.color))
+            background = GradientDrawable(
+                GradientDrawable.Orientation.TL_BR,
+                palette
+            ).apply {
+                cornerRadius = dp(14).toFloat()
+                setStroke(dp(2), 0xFFF8FAFC.toInt())
             }
             elevation = dp(5).toFloat()
             contentDescription = card.displayName()
         }
         val badge = TextView(root.context).apply {
             text = "${cardSymbol(card)}  ${card.color?.let(::colorName) ?: "צבעים"}"
-            textSize = 13f
-            setTextColor(inkColor(card.color))
+            textSize = 11f
+            setTextColor(accent)
             setPadding(dp(6), dp(4), dp(6), dp(4))
             background = GradientDrawable().apply {
-                setColor(0xFFF1F5F9.toInt())
+                setColor(0xFFF8FAFC.toInt())
                 cornerRadius = dp(8).toFloat()
             }
         }
@@ -173,22 +177,24 @@ class TakiPhoneController(
 
         val medallion = TextView(root.context).apply {
             text = cardSymbol(card)
-            textSize = if (card.isAction()) 21f else 36f
-            setTextColor(Color.WHITE)
+            textSize = if (card.isAction()) 22f else 35f
+            setTextColor(accent)
             gravity = Gravity.CENTER
             background = GradientDrawable().apply {
-                setColor(inkColor(card.color))
-                cornerRadius = dp(12).toFloat()
+                shape = GradientDrawable.OVAL
+                setColor(0xFFF8FAFC.toInt())
+                setStroke(dp(2), 0xBFFFFFFF.toInt())
             }
         }
-        face.addView(medallion, FrameLayout.LayoutParams(dp(56), dp(64), Gravity.CENTER))
+        face.addView(medallion, FrameLayout.LayoutParams(dp(62), dp(62), Gravity.CENTER))
 
         val caption = TextView(root.context).apply {
             text = cardLabel(card)
-            textSize = 9f
-            setTextColor(inkColor(card.color))
+            textSize = 10f
+            setTextColor(if (card.color == TakiColor.YELLOW) accent else Color.WHITE)
             gravity = Gravity.CENTER
             setTypeface(typeface, android.graphics.Typeface.BOLD)
+            setShadowLayer(dp(2).toFloat(), 0f, dp(1).toFloat(), 0x99000000.toInt())
         }
         face.addView(caption, FrameLayout.LayoutParams(
             FrameLayout.LayoutParams.MATCH_PARENT,
@@ -200,7 +206,8 @@ class TakiPhoneController(
         val lowerCorner = TextView(root.context).apply {
             text = cardSymbol(card)
             textSize = 12f
-            setTextColor(inkColor(card.color))
+            setTextColor(Color.WHITE)
+            setShadowLayer(dp(2).toFloat(), 0f, dp(1).toFloat(), 0x99000000.toInt())
             gravity = Gravity.CENTER
         }
         face.addView(lowerCorner, FrameLayout.LayoutParams(dp(24), dp(20), Gravity.BOTTOM or Gravity.END)
@@ -258,6 +265,19 @@ class TakiPhoneController(
         TakiColor.BLUE -> 0xFF1E40AF.toInt()
         TakiColor.YELLOW -> 0xFF92400E.toInt()
         null -> 0xFF5B21B6.toInt()
+    }
+
+    private fun cardPalette(color: TakiColor?): IntArray = when (color) {
+        TakiColor.RED -> intArrayOf(0xFFFB7185.toInt(), 0xFFBE123C.toInt())
+        TakiColor.GREEN -> intArrayOf(0xFF4ADE80.toInt(), 0xFF15803D.toInt())
+        TakiColor.BLUE -> intArrayOf(0xFF60A5FA.toInt(), 0xFF1D4ED8.toInt())
+        TakiColor.YELLOW -> intArrayOf(0xFFFDE047.toInt(), 0xFFD97706.toInt())
+        null -> intArrayOf(
+            0xFFEF4444.toInt(),
+            0xFF3B82F6.toInt(),
+            0xFF22C55E.toInt(),
+            0xFFEAB308.toInt()
+        )
     }
 
     private fun chooseColor(onChosen: (TakiColor) -> Unit) {

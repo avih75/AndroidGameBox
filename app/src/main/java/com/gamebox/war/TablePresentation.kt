@@ -6,6 +6,9 @@ import android.os.Bundle
 import android.view.Display
 import android.view.View
 import android.view.ViewGroup
+import android.view.Gravity
+import android.widget.LinearLayout
+import android.widget.HorizontalScrollView
 import android.widget.TextView
 import com.gamebox.common.ui.PlayingCardView
 import androidx.core.content.ContextCompat
@@ -22,6 +25,7 @@ class TablePresentation(
     private var tvMessage: TextView? = null
     private var tvSeriesScore: TextView? = null
     private var tvPublicMessage: TextView? = null
+    private var warCardsContainer: LinearLayout? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +39,7 @@ class TablePresentation(
         tvMessage = findViewById(R.id.tvMessage)
         tvSeriesScore = findViewById(R.id.tvSeriesScore)
         tvPublicMessage = findViewById(R.id.tvPublicMessage)
+        warCardsContainer = findViewById(R.id.warCardsContainer)
         findViewById<TextView>(R.id.tvAppVersion).text =
             context.getString(R.string.app_version_label, BuildConfig.VERSION_NAME)
     }
@@ -48,7 +53,9 @@ class TablePresentation(
         messageType: GameEngine.MessageType,
         playerSeriesScore: Int,
         cpuSeriesScore: Int,
-        publicMessage: String?
+        publicMessage: String?,
+        playerWarCards: List<Card>,
+        cpuWarCards: List<Card>
     ) {
         tvPlayerCount?.text = "אתה: $playerCount"
         tvCpuCount?.text = "מחשב: $cpuCount"
@@ -72,6 +79,52 @@ class TablePresentation(
 
         renderCard(cardPlayer, playerCard)
         renderCard(cardCpu, cpuCard)
+        renderWarCards(playerWarCards, cpuWarCards)
+    }
+
+    private fun renderWarCards(playerCards: List<Card>, cpuCards: List<Card>) {
+        val container = warCardsContainer ?: return
+        container.removeAllViews()
+        if (playerCards.isEmpty() && cpuCards.isEmpty()) {
+            container.visibility = View.GONE
+            return
+        }
+        container.visibility = View.VISIBLE
+        listOf("אתה" to playerCards, "מחשב" to cpuCards).forEach { (name, cards) ->
+            val row = LinearLayout(context).apply {
+                gravity = Gravity.CENTER_VERTICAL
+                orientation = LinearLayout.HORIZONTAL
+            }
+            row.addView(TextView(context).apply {
+                text = name
+                textSize = 14f
+                setTextColor(0xFFE0F2FE.toInt())
+                gravity = Gravity.CENTER
+            }, LinearLayout.LayoutParams(dp(58), ViewGroup.LayoutParams.WRAP_CONTENT))
+            val cardsRow = LinearLayout(context).apply {
+                gravity = Gravity.CENTER_VERTICAL
+                orientation = LinearLayout.HORIZONTAL
+            }
+            cards.forEachIndexed { index, card ->
+                val cardView = PlayingCardView(context)
+                if (index == 0 || index == cards.lastIndex) {
+                    cardView.showCard(card.rank, card.suit, card.isRed)
+                } else {
+                    cardView.showCardBack()
+                }
+                cardsRow.addView(cardView, LinearLayout.LayoutParams(dp(42), dp(58)).apply {
+                    setMargins(dp(2), dp(2), dp(2), dp(2))
+                })
+            }
+            row.addView(HorizontalScrollView(context).apply {
+                isHorizontalScrollBarEnabled = false
+                addView(cardsRow)
+            }, LinearLayout.LayoutParams(0, dp(62), 1f))
+            container.addView(row, LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            ))
+        }
     }
 
     private fun renderCard(view: PlayingCardView?, card: Card?) {
@@ -82,4 +135,7 @@ class TablePresentation(
             view.showCard(card.rank, card.suit, card.isRed)
         }
     }
+
+    private fun dp(value: Int): Int =
+        (value * context.resources.displayMetrics.density).toInt()
 }

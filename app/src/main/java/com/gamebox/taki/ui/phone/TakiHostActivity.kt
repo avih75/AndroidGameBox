@@ -15,6 +15,8 @@ import android.view.Display
 import android.view.Gravity
 import android.view.View
 import android.widget.Button
+import android.widget.EditText
+import android.text.InputFilter
 import android.widget.LinearLayout
 import android.widget.NumberPicker
 import android.widget.TextView
@@ -55,6 +57,7 @@ class TakiHostActivity : Activity() {
     private var myPlayerId = "p0"
     private var selectedPlayerCount = DEFAULT_PLAYER_COUNT
     private var hostCapacity = DEFAULT_PLAYER_COUNT
+    private var localPlayerName = "אני"
     private var winnerRecorded = false
     private var gameStarted = false
     private var clientEndpointId: String? = null
@@ -86,7 +89,14 @@ class TakiHostActivity : Activity() {
             .setItems(arrayOf("אירוח משחק ברשת", "הצטרפות למשחק", "משחק נגד המחשב")) { _, choice ->
                 when (choice) {
                     0 -> showHostCapacityDialog()
-                    1 -> withNearbyPermissions { startJoinLobby() }
+                    1 -> showPlayerNamesDialog(
+                        playerCount = 1,
+                        title = "הצטרפות למשחק",
+                        description = "כתוב את השם שיוצג לשחקנים האחרים"
+                    ) { names ->
+                        localPlayerName = names.first()
+                        withNearbyPermissions { startJoinLobby() }
+                    }
                     else -> showPracticeSetupDialog()
                 }
             }
@@ -98,7 +108,13 @@ class TakiHostActivity : Activity() {
         showPlayerCountPicker(
             title = "תרגול מול המחשב",
             description = "בחר כמה שחקנים ישתתפו (כולל אותך)"
-        ) { startLocalGame(it) }
+        ) { count ->
+            showPlayerNamesDialog(
+                playerCount = count,
+                title = "שמות השחקנים",
+                description = "בחר שם לכל שחקן ולמחשב"
+            ) { names -> startLocalGame(names) }
+        }
     }
 
     private fun showHostCapacityDialog() {
@@ -108,7 +124,14 @@ class TakiHostActivity : Activity() {
         ) { capacity ->
             hostCapacity = capacity
             scorePreferences.edit().putInt(KEY_PLAYER_COUNT, capacity).apply()
-            withNearbyPermissions { startHostLobby() }
+            showPlayerNamesDialog(
+                playerCount = 1,
+                title = "שם המארח",
+                description = "בחר את השם שיוצג במשחק"
+            ) { names ->
+                localPlayerName = names.first()
+                withNearbyPermissions { startHostLobby() }
+            }
         }
     }
 
@@ -145,15 +168,58 @@ class TakiHostActivity : Activity() {
             .show()
     }
 
-    private fun startLocalGame(playerCount: Int) {
+    private fun showPlayerNamesDialog(
+        playerCount: Int,
+        title: String,
+        description: String,
+        onSelected: (List<String>) -> Unit
+    ) {
+        val content = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(24), dp(12), dp(24), 0)
+            addView(TextView(this@TakiHostActivity).apply {
+                text = description
+                textSize = 16f
+                setPadding(0, 0, 0, dp(8))
+            })
+        }
+        val fields = (0 until playerCount).map { index ->
+            val defaultName = if (index == 0) "אני" else "מחשב ${index}"
+            EditText(this).apply {
+                setSingleLine(true)
+                filters = arrayOf(InputFilter.LengthFilter(24))
+                hint = if (index == 0) "שם השחקן" else "שם שחקן ${index + 1}"
+                setText(scorePreferences.getString(KEY_PLAYER_NAME_PREFIX + index, defaultName))
+                contentDescription = hint
+                content.addView(this)
+            }
+        }
+        AlertDialog.Builder(this)
+            .setTitle(title)
+            .setView(content)
+            .setPositiveButton("המשך") { _, _ ->
+                val names = fields.mapIndexed { index, field ->
+                    val defaultName = if (index == 0) "אני" else "מחשב ${index}"
+                    field.text.toString().trim().ifEmpty { defaultName }
+                }
+                val editor = scorePreferences.edit()
+                names.forEachIndexed { index, name ->
+                    editor.putString(KEY_PLAYER_NAME_PREFIX + index, name)
+                }
+                editor.apply()
+                onSelected(names)
+            }
+            .setNegativeButton("ביטול") { _, _ -> showModeDialog() }
+            .show()
+    }
+
+    private fun startLocalGame(playerNames: List<String>) {
         handler.removeCallbacksAndMessages(null)
         role = SessionRole.LOCAL
         gameStarted = true
-        selectedPlayerCount = playerCount
-        scorePreferences.edit().putInt(KEY_PLAYER_COUNT, playerCount).apply()
-        val names = mutableListOf("אני")
-        repeat(playerCount - 1) { names += "מחשב ${it + 1}" }
-        startGame(names, setOf("p0"))
+        selectedPlayerCount = playerNames.size
+        scorePreferences.edit().putInt(KEY_PLAYER_COUNT, playerNames.size).apply()
+        startGame(playerNames, setOf("p0"))
     }
 
     private fun startHostLobby() {
@@ -170,7 +236,7 @@ class TakiHostActivity : Activity() {
             onAction = ::startNetworkHostGame,
             onCancel = ::leaveNetworkLobby
         )
-        nearbySession?.startAdvertising(deviceDisplayName())
+        nearbySession?.startAdvertising(localPlayerName)
     }
 
     private fun startJoinLobby() {
@@ -317,7 +383,7 @@ class TakiHostActivity : Activity() {
             remotePlayerIds[endpointId] = "p${index + 1}"
         }
         sendLobbyUpdates()
-        val players = mutableListOf("אני")
+        val players = mutableListOf(localPlayerName)
         players += remotePlayerIds.entries
             .sortedBy { it.value.drop(1).toInt() }
             .map { remotePlayerNames[it.key] ?: "שחקן" }
@@ -479,7 +545,7 @@ class TakiHostActivity : Activity() {
 
     private fun sendLobbyUpdate(endpointId: String) {
         val playerId = remotePlayerIds[endpointId] ?: return
-        val names = listOf("אני") + remotePlayerNames.values
+        val names = listOf(localPlayerName) + remotePlayerNames.values
         nearbySession?.send(
             endpointId,
             TakiMessageCodec.lobbyBytes(playerId, names, hostCapacity)
@@ -627,7 +693,7 @@ class TakiHostActivity : Activity() {
     }
 
     private fun refreshHostLobby() {
-        val connectedNames = listOf("אני") + remotePlayerNames.values
+        val connectedNames = listOf(localPlayerName) + remotePlayerNames.values
         updateLobby(
             "שחקנים (${connectedNames.size}/$hostCapacity): ${connectedNames.joinToString(" · ")}",
             actionEnabled = remotePlayerIds.isNotEmpty()
@@ -649,7 +715,7 @@ class TakiHostActivity : Activity() {
                 setOnClickListener {
                     lobbyActionButton?.isEnabled = false
                     updateLobby("מתחבר אל $endpointName...", actionEnabled = false)
-                    nearbySession?.requestConnection(deviceDisplayName(), endpointId)
+                    nearbySession?.requestConnection(localPlayerName, endpointId)
                 }
             })
         }
@@ -810,11 +876,12 @@ class TakiHostActivity : Activity() {
         private const val REQUEST_NEARBY_PERMISSIONS = 701
         private const val AI_TURN_MIN_DELAY_MS = 2_000L
         private const val AI_TURN_MAX_DELAY_MS = 4_000L
-        private const val TAKI_MUSIC_VOLUME = 0.025
+        private const val TAKI_MUSIC_VOLUME = 0.06
         private const val TAKI_SERVICE_ID = "com.gamebox.taki"
         private const val SCORE_PREFERENCES = "taki_scores"
         private const val SETTINGS_PREFERENCES = "game_box_settings"
         private const val KEY_PLAYER_COUNT = "player_count"
+        private const val KEY_PLAYER_NAME_PREFIX = "player_name_"
         private const val KEY_PLAYER_WINS_PREFIX = "wins_"
         private const val KEY_BACKGROUND_MUSIC = "background_music_enabled"
         private const val KEY_SOUND_EFFECTS = "sound_effects_enabled"

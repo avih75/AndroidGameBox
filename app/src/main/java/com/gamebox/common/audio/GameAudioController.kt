@@ -8,10 +8,11 @@ import java.util.concurrent.ConcurrentLinkedQueue
 import kotlin.math.PI
 import kotlin.math.max
 import kotlin.math.sin
+import kotlin.math.tanh
 
 class GameAudioController {
 
-    private enum class Effect { CARD_DRAW, CARD_COLLECT, CARD_PLAY }
+    private enum class Effect { CARD_DRAW, CARD_COLLECT, CARD_PLAY, SUCCESS, INCORRECT }
 
     private data class Voice(
         val effect: Effect,
@@ -110,6 +111,10 @@ class GameAudioController {
 
     fun playCardPlayed() = enqueueEffect(Effect.CARD_PLAY)
 
+    fun playSuccess() = enqueueEffect(Effect.SUCCESS)
+
+    fun playIncorrect() = enqueueEffect(Effect.INCORRECT)
+
     fun stopGame() {
         active = false
         audioThread?.join(THREAD_STOP_TIMEOUT_MS)
@@ -140,11 +145,11 @@ class GameAudioController {
                     while (voiceIterator.hasNext()) {
                         val voice = voiceIterator.next()
                         val voiceSample = effectSample(voice)
-                        sample += voiceSample.first
+                        sample += voiceSample.first * EFFECTS_MASTER_VOLUME
                         if (voiceSample.second) voiceIterator.remove()
                     }
 
-                    buffer[frame] = (sample.coerceIn(-1.0, 1.0) * Short.MAX_VALUE).toInt().toShort()
+                    buffer[frame] = (tanh(sample) * Short.MAX_VALUE).toInt().toShort()
                     samplePosition++
                 }
 
@@ -224,6 +229,8 @@ class GameAudioController {
             Effect.CARD_DRAW -> DRAW_LENGTH
             Effect.CARD_COLLECT -> COLLECT_LENGTH
             Effect.CARD_PLAY -> PLAY_LENGTH
+            Effect.SUCCESS -> FEEDBACK_LENGTH
+            Effect.INCORRECT -> FEEDBACK_LENGTH
         }
         if (voice.position >= length) return 0.0 to true
 
@@ -245,6 +252,17 @@ class GameAudioController {
                 val frequency = PLAY_START_HZ + (PLAY_END_HZ - PLAY_START_HZ) * progress
                 val tone = sin(2.0 * PI * frequency * voice.position / SAMPLE_RATE)
                 (tone * PLAY_TONE_LEVEL + nextNoise(voice) * PLAY_NOISE_LEVEL) * envelope
+            }
+            Effect.SUCCESS -> {
+                val frequency = if (progress < 0.5) SUCCESS_START_HZ else SUCCESS_END_HZ
+                sin(2.0 * PI * frequency * voice.position / SAMPLE_RATE) *
+                    sin(PI * progress) * FEEDBACK_TONE_LEVEL
+            }
+            Effect.INCORRECT -> {
+                val frequency = INCORRECT_START_HZ +
+                    (INCORRECT_END_HZ - INCORRECT_START_HZ) * progress
+                sin(2.0 * PI * frequency * voice.position / SAMPLE_RATE) *
+                    sin(PI * progress) * FEEDBACK_TONE_LEVEL
             }
         }
         voice.position++
@@ -268,9 +286,9 @@ class GameAudioController {
         private const val FRAMES_PER_BUFFER = 512
         private const val BYTES_PER_SAMPLE = 2
         private const val THREAD_STOP_TIMEOUT_MS = 500L
-        private const val CHORD_LENGTH_SECONDS = 8.0
-        private const val CHORD_FADE_SECONDS = 2.0
-        private const val BREATH_SECONDS = 6.0
+        private const val CHORD_LENGTH_SECONDS = 12.0
+        private const val CHORD_FADE_SECONDS = 4.0
+        private const val BREATH_SECONDS = 8.0
         private const val MUSIC_VOLUME = 0.10
         private const val ACCOMPANIMENT_VOLUME = 0.42
         private const val MELODY_VOLUME = 0.38
@@ -294,6 +312,13 @@ class GameAudioController {
         private const val PLAY_END_HZ = 480.0
         private const val PLAY_TONE_LEVEL = 0.30
         private const val PLAY_NOISE_LEVEL = 0.06
+        private const val EFFECTS_MASTER_VOLUME = 0.36
+        private const val FEEDBACK_LENGTH = SAMPLE_RATE / 4
+        private const val FEEDBACK_TONE_LEVEL = 0.20
+        private const val SUCCESS_START_HZ = 620.0
+        private const val SUCCESS_END_HZ = 820.0
+        private const val INCORRECT_START_HZ = 310.0
+        private const val INCORRECT_END_HZ = 230.0
         private val CHORDS = arrayOf(
             doubleArrayOf(130.81, 164.81, 196.00),
             doubleArrayOf(110.00, 130.81, 164.81),

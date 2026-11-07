@@ -128,7 +128,7 @@ object TakiMessageCodec {
             isGameOver = json.getBoolean("isGameOver"),
             lastActionMessage = json.getString("lastActionMessage"),
             actionHistory = json.getJSONArray("actionHistory").let { history ->
-                (0 until history.length()).map { history.getString(it) }.takeLast(6)
+                (0 until history.length()).map { history.getString(it) }.takeLast(10)
             }
         )
     }

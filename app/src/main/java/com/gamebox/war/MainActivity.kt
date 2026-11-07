@@ -258,7 +258,7 @@ class MainActivity : AppCompatActivity() {
             if (game.draw()) {
                 gameAudio.playCardsCollected()
                 updateUI()
-                if (game.lastWarCards.isNotEmpty()) showWarResolution()
+                if (game.lastWarCards.isNotEmpty() && presentation == null) showWarResolution()
             }
         }
         btnNewGame.setOnClickListener {
@@ -383,7 +383,9 @@ class MainActivity : AppCompatActivity() {
             messageType = game.lastMessageType,
             playerSeriesScore = playerSeriesScore,
             cpuSeriesScore = cpuSeriesScore,
-            publicMessage = publicMessage
+            publicMessage = publicMessage,
+            playerWarCards = game.lastWarCards["player"].orEmpty(),
+            cpuWarCards = game.lastWarCards["cpu"].orEmpty()
         )
         updatePhoneSharedInfoVisibility()
     }

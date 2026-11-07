@@ -45,13 +45,18 @@ jobs:
         with:
           gradle-version: "8.2"
 
+      - name: Set artifact version
+        run: |
+          echo "APP_VERSION_CODE=$((GITHUB_RUN_NUMBER * 1000 + GITHUB_RUN_ATTEMPT))" >> "$GITHUB_ENV"
+          echo "APP_VERSION_NAME=1.0.${GITHUB_RUN_NUMBER}.${GITHUB_RUN_ATTEMPT}" >> "$GITHUB_ENV"
+
       - name: Build debug APK
         run: gradle --no-daemon assembleDebug
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: AndroidGameBox-debug-apk
+          name: AndroidGameBox-debug-apk-v${{ env.APP_VERSION_NAME }}
           path: app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
           retention-days: 14

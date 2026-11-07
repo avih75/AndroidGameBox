@@ -327,6 +327,6 @@ class TakiEngine(
     }
 
     companion object {
-        private const val ACTION_HISTORY_LIMIT = 6
+        private const val ACTION_HISTORY_LIMIT = 10
     }
 }

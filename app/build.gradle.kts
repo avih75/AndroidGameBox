@@ -3,6 +3,14 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
+val artifactVersionCode = providers.environmentVariable("APP_VERSION_CODE")
+    .orElse("1")
+    .get()
+    .toInt()
+val artifactVersionName = providers.environmentVariable("APP_VERSION_NAME")
+    .orElse("1.0")
+    .get()
+
 android {
     namespace = "com.gamebox.war"
     compileSdk = 34
@@ -11,8 +19,8 @@ android {
         applicationId = "com.gamebox.war"
         minSdk = 26
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = artifactVersionCode
+        versionName = artifactVersionName
     }
 
     buildTypes {

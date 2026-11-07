@@ -6,6 +6,7 @@ import android.app.AlertDialog
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.Typeface
+import android.graphics.drawable.GradientDrawable
 import android.hardware.display.DisplayManager
 import android.os.Build
 import android.os.Bundle
@@ -21,6 +22,7 @@ import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import com.gamebox.common.audio.GameAudioController
 import com.gamebox.common.multiplayer.NearbySession
 import org.json.JSONException
 import org.json.JSONObject
@@ -39,6 +41,7 @@ class LetterGameActivity : Activity(), TextToSpeech.OnInitListener {
     private var revealed = false
     private var tts: TextToSpeech? = null
     private var ttsReady = false
+    private val gameAudio = GameAudioController()
     private var permissionAction: (() -> Unit)? = null
     private var nearby: NearbySession? = null
     private var discovered = linkedMapOf<String, String>()
@@ -68,42 +71,44 @@ class LetterGameActivity : Activity(), TextToSpeech.OnInitListener {
     }
 
     private fun showModeDialog() {
-        AlertDialog.Builder(this)
-            .setTitle("נחשו את האות הראשונה · Guess the first letter")
-            .setItems(arrayOf(
+        showButtonChoice(
+            "נחשו את האות הראשונה · Guess the first letter",
+            listOf(
                 "משחק לבד · Play alone",
                 "מורה מדריך, השחקן משתמש במכשיר הזה · Teacher guides on this device",
                 "ארח משחק עם מורה · Host a teacher-guided game",
                 "הצטרף כשחקן · Join as the learner"
-            )) { _, selected ->
+            ),
+            onSelected = { selected ->
                 when (selected) {
                     0 -> { role = Role.SOLO; chooseLanguage() }
                     1 -> { role = Role.GUIDED_LOCAL; chooseLanguage() }
                     2 -> { role = Role.TEACHER_HOST; chooseLanguage() }
                     else -> { role = Role.LEARNER; withNearbyPermissions(::startDiscovery) }
                 }
-            }
-            .setOnCancelListener { finish() }
-            .show()
+            },
+            onCancel = { finish() }
+        )
     }
 
     private fun chooseLanguage() {
-        AlertDialog.Builder(this)
-            .setTitle("Choose the game language / בחרו שפה")
-            .setItems(arrayOf("English", "עברית")) { _, selected ->
+        showButtonChoice(
+            "Choose the game language / בחרו שפה",
+            listOf("English", "עברית"),
+            onSelected = { selected ->
                 language = if (selected == 0) LetterLanguage.ENGLISH else LetterLanguage.HEBREW
                 questionDeck = LetterQuestionBank.questions.shuffled()
                 if (role == Role.TEACHER_HOST) withNearbyPermissions(::startAdvertising)
                 else startLocalRound()
             }
-            .setOnCancelListener { showModeDialog() }
-            .show()
+        )
     }
 
     private fun startLocalRound() {
         points = 0
         startNextQuestion()
         renderGame()
+        startGameSounds()
         checkExternalDisplay()
     }
 
@@ -234,13 +239,21 @@ class LetterGameActivity : Activity(), TextToSpeech.OnInitListener {
         val item = question ?: return
         val isHebrew = language == LetterLanguage.HEBREW
         pictureView.text = item.picture
-        questionView.text = if (isHebrew) {
-            "מה האות הראשונה במילה ${item.hebrewWord}?"
-        } else {
-            "What is the first letter of ${item.englishWord}?"
-        }
+        questionView.text = if (isHebrew) "מה האות הראשונה?" else "What is the first letter?"
+        updatePromptVisibility()
         scoreView.text = if (isHebrew) "ניקוד: $points" else "Score: $points"
         status.text = statusText
+        status.textSize = if (completedQuestion) 20f else 17f
+        status.setTextColor(
+            if (completedQuestion) Color.rgb(15, 23, 42) else Color.rgb(203, 213, 225)
+        )
+        status.background = if (completedQuestion) {
+            GradientDrawable().apply {
+                setColor(if (revealed) Color.rgb(253, 230, 138) else Color.rgb(134, 239, 172))
+                cornerRadius = dp(12).toFloat()
+            }
+        } else null
+        status.setPadding(dp(8), dp(8), dp(8), dp(8))
         val learnerCanAnswer = role != Role.TEACHER_HOST
         answerGrid.visibility = if (learnerCanAnswer) View.VISIBLE else View.GONE
         renderOptions()
@@ -261,6 +274,15 @@ class LetterGameActivity : Activity(), TextToSpeech.OnInitListener {
                 textSize = 20f
                 isAllCaps = false
                 isEnabled = !completedQuestion
+                if (completedQuestion) {
+                    backgroundTintList = android.content.res.ColorStateList.valueOf(
+                        if (letter == question?.letter(language)) {
+                            Color.rgb(134, 239, 172)
+                        } else {
+                            Color.rgb(203, 213, 225)
+                        }
+                    )
+                }
                 setOnClickListener { chooseLetter(letter) }
             }
             val params = GridLayout.LayoutParams().apply {
@@ -291,8 +313,10 @@ class LetterGameActivity : Activity(), TextToSpeech.OnInitListener {
             points += 1
             completedQuestion = true
             statusText = if (language == LetterLanguage.ENGLISH) "Correct! +1 point." else "נכון! נקודה אחת."
+            gameAudio.playSuccess()
         } else {
             statusText = if (language == LetterLanguage.ENGLISH) "Not quite. Try another letter." else "לא בדיוק. נסו אות אחרת."
+            gameAudio.playIncorrect()
         }
         refreshGameUi()
         if (role == Role.TEACHER_HOST) broadcastResult(correct)
@@ -360,6 +384,7 @@ class LetterGameActivity : Activity(), TextToSpeech.OnInitListener {
                     presentation?.dismiss()
                     presentation = null
                     presentationDisplay = null
+                    updatePromptVisibility()
                 }
             }
             override fun onDisplayChanged(displayId: Int) = Unit
@@ -375,6 +400,7 @@ class LetterGameActivity : Activity(), TextToSpeech.OnInitListener {
             presentation?.dismiss()
             presentation = null
             presentationDisplay = null
+            updatePromptVisibility()
             return
         }
         if (presentationDisplay?.displayId != display.displayId) {
@@ -383,6 +409,14 @@ class LetterGameActivity : Activity(), TextToSpeech.OnInitListener {
             presentationDisplay = display
         }
         updatePresentation()
+        updatePromptVisibility()
+    }
+
+    private fun updatePromptVisibility() {
+        if (!::pictureView.isInitialized || !::questionView.isInitialized) return
+        val visibility = if (presentation == null) View.VISIBLE else View.GONE
+        pictureView.visibility = visibility
+        questionView.visibility = visibility
     }
 
     private fun updatePresentation() {
@@ -499,6 +533,7 @@ class LetterGameActivity : Activity(), TextToSpeech.OnInitListener {
                 points = 0
                 questionDeck = LetterQuestionBank.questions.shuffled()
                 startNextNetworkQuestion()
+                startGameSounds()
                 checkExternalDisplay()
             }
         }
@@ -601,6 +636,8 @@ class LetterGameActivity : Activity(), TextToSpeech.OnInitListener {
                     completedQuestion = false
                     statusText = if (language == LetterLanguage.ENGLISH) "Choose the first letter." else "בחרו את האות הראשונה."
                     renderGame()
+                    startGameSounds()
+                    checkExternalDisplay()
                 }
                 "answer" -> {
                     if (role == Role.TEACHER_HOST && endpointId == hostEndpoint) {
@@ -625,6 +662,8 @@ class LetterGameActivity : Activity(), TextToSpeech.OnInitListener {
                         else -> if (language == LetterLanguage.ENGLISH) "Not quite. Try another letter." else "לא בדיוק. נסו שוב."
                     }
                     completedQuestion = payload.optBoolean("complete")
+                    revealed = payload.optBoolean("revealed")
+                    if (correct) gameAudio.playSuccess() else gameAudio.playIncorrect()
                     refreshGameUi()
                 }
             }
@@ -687,6 +726,50 @@ class LetterGameActivity : Activity(), TextToSpeech.OnInitListener {
         setMargins(dp(2), dp(3), dp(2), dp(3))
     }
 
+    private fun showButtonChoice(
+        title: String,
+        choices: List<String>,
+        onSelected: (Int) -> Unit,
+        onCancel: () -> Unit = { showModeDialog() }
+    ) {
+        val content = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(20), dp(8), dp(20), dp(8))
+        }
+        val dialog = AlertDialog.Builder(this)
+            .setTitle(title)
+            .setView(content)
+            .setNegativeButton(if (language == LetterLanguage.HEBREW) "ביטול" else "Cancel") { _, _ ->
+                onCancel()
+            }
+            .create()
+        choices.forEachIndexed { index, choice ->
+            content.addView(Button(this).apply {
+                text = choice
+                isAllCaps = false
+                setOnClickListener {
+                    dialog.dismiss()
+                    onSelected(index)
+                }
+            }, matchWrap())
+        }
+        dialog.show()
+    }
+
+    private fun startGameSounds() {
+        gameAudio.startGame(music = false, effects = true)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (question != null) startGameSounds()
+    }
+
+    override fun onPause() {
+        gameAudio.stopGame()
+        super.onPause()
+    }
+
     private fun deviceDisplayName() = "${Build.MANUFACTURER} ${Build.MODEL}".take(32)
     private fun dp(value: Int) = (value * resources.displayMetrics.density).toInt()
 
@@ -694,6 +777,7 @@ class LetterGameActivity : Activity(), TextToSpeech.OnInitListener {
         (getSystemService(DISPLAY_SERVICE) as DisplayManager).unregisterDisplayListener(displayListener)
         presentation?.dismiss()
         nearby?.stop()
+        gameAudio.stopGame()
         tts?.stop()
         tts?.shutdown()
         super.onDestroy()

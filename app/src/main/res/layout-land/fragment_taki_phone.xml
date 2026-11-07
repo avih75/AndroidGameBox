@@ -96,7 +96,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:maxLines="6"
+            android:maxLines="10"
             android:padding="6dp"
             android:background="#1E293B"
             android:textColor="#CBD5E1"

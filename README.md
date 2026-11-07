@@ -24,6 +24,10 @@ The current checkout does not include a Gradle wrapper. Android Studio must
 therefore provide the Gradle sync/build environment. Adding a checked-in,
 version-pinned wrapper is a recommended next build-reliability task.
 
+CI debug APKs use a version derived from the GitHub Actions run number and
+attempt, so each uploaded artifact has a distinct version. Local builds default
+to version `1.0` (version code `1`).
+
 ## Current implementation
 
 - Kotlin Android app, minimum SDK 26, compile/target SDK 34.

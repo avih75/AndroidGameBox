@@ -52,9 +52,9 @@ class LetterTablePresentation(context: Context, display: Display) : Presentation
     fun update(item: LetterQuestion, language: LetterLanguage, points: Int) {
         picture.text = item.picture
         question.text = if (language == LetterLanguage.ENGLISH) {
-            "What is the first letter of ${item.englishWord}?"
+            "What is the first letter?"
         } else {
-            "מה האות הראשונה במילה ${item.hebrewWord}?"
+            "מה האות הראשונה?"
         }
         score.text = if (language == LetterLanguage.ENGLISH) "Score: $points" else "ניקוד: $points"
     }
