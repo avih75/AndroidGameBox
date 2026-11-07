@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="20dp"
+        android:text="@string/settings"
+        android:textColor="@color/text"
+        android:textSize="28sp"
+        android:textStyle="bold" />
+
+    <CheckBox
+        android:id="@+id/checkboxExternalDisplay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:buttonTint="@color/accent"
+        android:text="@string/use_external_display"
+        android:textColor="@color/text"
+        android:textSize="17sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="20dp"
+        android:text="@string/external_display_setting_description"
+        android:textColor="#94A3B8"
+        android:textSize="14sp" />
+
+    <CheckBox
+        android:id="@+id/checkboxShowSharedInfoOnPhone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:buttonTint="@color/accent"
+        android:text="@string/show_shared_info_on_phone"
+        android:textColor="@color/text"
+        android:textSize="17sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="20dp"
+        android:text="@string/shared_info_on_phone_description"
+        android:textColor="#94A3B8"
+        android:textSize="14sp" />
+
+    <CheckBox
+        android:id="@+id/checkboxBackgroundMusic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:buttonTint="@color/accent"
+        android:text="@string/background_music"
+        android:textColor="@color/text"
+        android:textSize="17sp" />
+
+    <CheckBox
+        android:id="@+id/checkboxSoundEffects"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:buttonTint="@color/accent"
+        android:text="@string/sound_effects"
+        android:textColor="@color/text"
+        android:textSize="17sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/catalog_game_background"
+        android:padding="16dp"
+        android:text="@string/settings_audio_note"
+        android:textColor="#CBD5E1"
+        android:textSize="14sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <Button
+        android:id="@+id/btnSettingsBack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/back_to_games"
+        android:textAllCaps="false" />
+
+</LinearLayout>

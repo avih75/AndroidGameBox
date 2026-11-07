@@ -70,6 +70,8 @@
     <string name="game_sudoku_description">השלם את הלוח בלי לחזור על ספרות בשורה, בעמודה או באזור.</string>
     <string name="game_word_search">תפזורת</string>
     <string name="game_word_search_description">מצא מילים שמוסתרות בתוך רשת אותיות.</string>
+    <string name="game_guess_the_letter">נחש את האות הראשונה</string>
+    <string name="game_guess_the_letter_description">למדו אותיות בעברית ובאנגלית בעזרת תמונות, רמזים וניקוד.</string>
     <string name="game_nim">נים</string>
     <string name="game_nim_description">קח פריטים מערימות ונסה להשאיר ליריב את המהלך האחרון.</string>
     <string name="game_reversi">רברסי</string>

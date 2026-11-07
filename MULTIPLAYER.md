@@ -168,5 +168,5 @@ Exact payload shapes will be defined per game, but the envelope and transport st
 
 ---
 
-**Status:** Taki and War use Nearby Connections for host advertising, client discovery, authenticated joining, host-authoritative actions, and per-client private state. Each game retains its own lobby and message contract; shared discovery/connection/payload transport lives in `common/multiplayer`.
+**Status:** Taki and War use Nearby Connections for host advertising, client discovery, authenticated joining, host-authoritative actions, and per-client private state. The letter game also uses Nearby Connections for a teacher-hosted session with one learner client. Each game retains its own lobby and message contract; shared discovery/connection/payload transport lives in `common/multiplayer`.
 All future multiplayer games must follow this model unless this document is explicitly updated.

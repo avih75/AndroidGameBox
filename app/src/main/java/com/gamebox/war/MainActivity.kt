@@ -133,6 +133,12 @@ class MainActivity : AppCompatActivity() {
                                     com.gamebox.taki.ui.phone.TakiHostActivity::class.java
                                 ))
                             }
+                            R.string.game_guess_the_letter -> {
+                                startActivity(android.content.Intent(
+                                    this,
+                                    com.gamebox.letter.LetterGameActivity::class.java
+                                ))
+                            }
                             else -> showGameSetup()
                         }
                     }

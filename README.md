@@ -1,9 +1,9 @@
 # Game Box
 
-Game Box is an Android app for a growing collection of games. The current
-playable game is **War**, against the computer. The phone is the control
-surface; when enabled and supported, a connected external display shows the
-shared game table.
+Game Box is an Android app for a growing collection of games. Playable games
+include **War**, **Taki**, and **Guess the first letter**. The letter game
+supports English and Hebrew, solo or teacher-guided play, and can show its
+shared picture and prompt on an external display.
 
 The home screen also lists proposed follow-on games by category. Games marked
 as planned are catalog suggestions only; they cannot be launched yet.
@@ -39,7 +39,8 @@ version-pinned wrapper is a recommended next build-reliability task.
 - Reusable category illustrations on the catalog game cards.
 - War series scoring, a phone-only player card count, and selectable messages
   that can be shown on the public display.
-- Only War is currently playable; other catalog entries are planned.
+- The letter game includes emoji illustrations for its picture cards; animated
+  image assets can be added later without changing its question and scoring flow.
 
 War tie handling in the existing POC is simplified. Confirm the final rule
 set before treating tie or insufficient-card outcomes as finalized.
