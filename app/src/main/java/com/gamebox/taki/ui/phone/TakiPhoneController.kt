@@ -38,6 +38,7 @@ class TakiPhoneController(
 
     private var lastPrivate: TakiPrivateState? = null
     private var lastPublic: TakiPublicState? = null
+    private var sharedInfoVisible = true
     private val sharedInfoViews = listOf(
         tvStatus,
         tvPendingDraw,
@@ -129,10 +130,17 @@ class TakiPhoneController(
             } else {
                 View.GONE
             }
+        applySharedInfoVisibility()
     }
 
     fun setSharedInfoVisible(visible: Boolean) {
-        sharedInfoViews.forEach { it.visibility = if (visible) View.VISIBLE else View.GONE }
+        sharedInfoVisible = visible
+        applySharedInfoVisibility()
+    }
+
+    private fun applySharedInfoVisibility() {
+        val visibility = if (sharedInfoVisible) View.VISIBLE else View.GONE
+        sharedInfoViews.forEach { it.visibility = visibility }
     }
 
     private fun makeCardView(card: TakiCard): FrameLayout {
